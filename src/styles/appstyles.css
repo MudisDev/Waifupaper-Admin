@@ -9,7 +9,7 @@
 .navbar a {
   color: white;
   margin: 20px;
-  
+
   border-radius: 25px;
   padding: 5px;
 }
@@ -17,4 +17,29 @@
 .navbar a:hover {
   background-color: gray;
   transition-duration: 0.3s;
+}
+
+.waifus-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.waifus-card {
+  width: 320px;
+}
+
+.wallpapers-container{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.wallpapers-container img{
+  width: 200px;
+  height: 300px;
+  margin: 10px;
+  border-radius: 15px;
+  object-fit: cover;
 }

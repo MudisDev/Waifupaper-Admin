@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles/appstyles.css";
+import { show_characters } from "../config/Url_Config";
+import NavBar from "../routes/NavBar";
 
 export default function Waifus() {
   const [waifus, setWaifus] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://192.168.1.4/waifupaper/api/lista/mostrar_personajes.php")
+    //fetch("http://192.168.1.4/waifupaper/api/lista/mostrar_personajes.php")
+    fetch(`${show_characters}`)
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -36,31 +38,40 @@ export default function Waifus() {
 
   return (
     <div>
-      <nav className="navbar">
+      <NavBar />
+      {/* <nav className="navbar">
         <Link to="/home">Home</Link>
         <Link to="/waifus">Lista Waifus</Link>
         <Link to="/agregar_waifu">Agregar Waifu</Link>
         <Link to="/editar_waifu">Editar Waifu</Link>
         <Link to="/agregar_wallpapers">Agregar Wallpapers</Link>
         <Link to="/editar_wallpapers">Editar Wallpapers</Link>
-      </nav>
-      Waifus
-      <p style={{ color: "red" }}>Esta es la pantalla de waifus</p>
-      {waifus.map((waifu) => (
-        <div
-          key={waifu.id}
-          style={{ border: "1px solid black", margin: "10px", padding: "10px" }}
-        >
-          <img
-            src={waifu.imagen}
-            alt={waifu.nombre}
-            style={{ width: 150, height: 250, objectFit: "cover" }}
-          />
-          <h2>
-            {waifu.nombre} ({waifu.alias})
-          </h2>
-        </div>
-      ))}
+      </nav> */}
+
+      <div className="waifus-container">
+        {waifus.map((waifu) => (
+          <div
+            className="waifus-card"
+            key={waifu.id}
+            style={{
+              border: "1px solid black",
+              margin: "10px",
+              padding: "10px",
+            }}
+          >
+            <Link to={`/perfil_waifu/${waifu.id}`} /* state={{ waifuData: waifu }} */>
+              <img
+                src={waifu.imagen}
+                alt={waifu.nombre}
+                style={{ width: 150, height: 250, objectFit: "cover" }}
+              />
+              <h2>
+                {waifu.nombre} ({waifu.alias})
+              </h2>
+            </Link>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
