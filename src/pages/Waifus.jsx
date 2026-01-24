@@ -59,7 +59,9 @@ export default function Waifus() {
               padding: "10px",
             }}
           >
-            <Link to={`/perfil_waifu/${waifu.id}`} /* state={{ waifuData: waifu }} */>
+            <Link
+              to={`/perfil_waifu/${waifu.id}`} /* state={{ waifuData: waifu }} */
+            >
               <img
                 src={waifu.imagen}
                 alt={waifu.nombre}

@@ -55,7 +55,6 @@ export const Perfil_Waifu = () => {
           <h1>{waifuData.nombre} ({waifuData.alias})</h1>
           {/* <p>{waifuData.descripcion}</p> */}
           <img src={waifuData.imagen} alt={waifuData.nombre} />
-          <p>Alias: {waifuData.alias}</p>
           <p>Descripción: {waifuData.descripcion}</p>
           <p>Historia: {waifuData.historia}</p>
           <p>Pasatiempo: {waifuData.pasatiempo}</p>
