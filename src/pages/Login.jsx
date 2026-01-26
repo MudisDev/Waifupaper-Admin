@@ -11,13 +11,13 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       const response = await fetch(
-        `${login_user}?username=${username}&password=${password}`
+        `${login_user}?username=${username}&password=${password}`,
       );
 
       const data = await response.json();
       console.log("Respuesta login:", data);
 
-      if (data) {
+      if (!data.Error) {
         console.log(`usuario => ${data.username} - ${data.nombre}`);
         navigate("/home"); // 👈 redirigir
       } else {
@@ -33,30 +33,37 @@ export default function Login() {
     handleLogin();
   };
 
+  const disabledButton = username != "" && password != "" ? true : false;
+
   return (
     <div>
+      <h1>WaifuPaper - Panel Admin</h1>
       <h2>Login</h2>
 
       <form onSubmit={handleSubmit}>
         <label>
           Username:
+          <p></p>
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
         </label>
-
+        <p></p>
         <label>
           Password:
+          <p></p>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-
-        <button type="submit">Submit</button>
+        <p></p>
+        <button type="submit" disabled={!disabledButton}>
+          Submit
+        </button>
       </form>
     </div>
   );

@@ -7,6 +7,9 @@ import { Agregar_Wallpapers } from "../pages/Agregar_Wallpapers";
 import { Editar_Wallpapers } from "../pages/Editar_Wallpapers";
 import { Home } from "../pages/Home";
 import { Perfil_Waifu } from "../pages/Perfil_Waifu";
+import { Galeria } from "../pages/Galeria";
+import { Configuracion } from "../pages/Configuracion";
+import { Wallpaper } from "../pages/Wallpaper";
 
 export default function AppRoutes() {
   return (
@@ -19,6 +22,9 @@ export default function AppRoutes() {
       <Route path="/agregar_wallpapers" element={<Agregar_Wallpapers />} />
       <Route path="/editar_wallpapers" element={<Editar_Wallpapers />} />
       <Route path="/perfil_waifu/:id" element={<Perfil_Waifu />} />
+      <Route path="/galeria" element={<Galeria />} />
+      <Route path="/configuracion" element={<Configuracion />} />
+      <Route path="/wallpaper/:id" element={<Wallpaper />} />
     </Routes>
   );
 }

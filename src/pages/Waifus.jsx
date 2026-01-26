@@ -39,14 +39,12 @@ export default function Waifus() {
   return (
     <div>
       <NavBar />
-      {/* <nav className="navbar">
-        <Link to="/home">Home</Link>
-        <Link to="/waifus">Lista Waifus</Link>
+
+      <h1>Waifus</h1>
+
+      <div className="link-button">
         <Link to="/agregar_waifu">Agregar Waifu</Link>
-        <Link to="/editar_waifu">Editar Waifu</Link>
-        <Link to="/agregar_wallpapers">Agregar Wallpapers</Link>
-        <Link to="/editar_wallpapers">Editar Wallpapers</Link>
-      </nav> */}
+      </div>
 
       <div className="waifus-container">
         {waifus.map((waifu) => (

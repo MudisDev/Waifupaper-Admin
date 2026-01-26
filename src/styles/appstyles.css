@@ -31,12 +31,12 @@
   width: 320px;
 }
 
-.wallpapers-container{
+.wallpapers-container {
   display: flex;
   flex-wrap: wrap;
 }
 
-.wallpapers-container img{
+.wallpapers-container img {
   width: 200px;
   height: 300px;
   margin: 10px;
@@ -52,8 +52,64 @@
   margin: auto;
 }
 
-.form-waifu-container select, input{
+.form-waifu-container select,
+input {
   padding: 10px;
   border-radius: 10px;
   border: 1px solid #ccc;
+}
+
+.galeria-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.galeria-card {
+  width: 200px;
+  height: 300px;
+}
+
+.galeria-card img {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  object-fit: cover;
+}
+
+.link-button {
+  background-color: black;
+  border: white 1px solid;
+  border-radius: 25px;
+
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  width: fit-content;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.link-button a {
+  color: white;
+  display: block;
+  padding: 10px 20px;
+  text-decoration: none;
+}
+
+.dashboard-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.dashboard-card {
+  background-color: black;
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  width: 200px;
+  text-align: center;
 }
