@@ -113,3 +113,34 @@ input {
   width: 200px;
   text-align: center;
 }
+
+.wallpaper{
+  width: 500px;
+  height: auto;
+}
+
+.tags-container {
+  --background-color: aqua;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 10px;
+}
+
+.tag {
+  background-color: #111;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 999px; /* pill shape */
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap; /* evita que se rompa */
+  list-style: none;
+}
+
+.tags-container :hover{
+  background-color: #333;
+  transition-duration: 0.3s;
+  cursor: pointer;
+}

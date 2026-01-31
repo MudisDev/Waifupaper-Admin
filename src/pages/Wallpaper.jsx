@@ -2,11 +2,36 @@ import React from "react";
 import NavBar from "../routes/NavBar";
 import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { search_image } from "../config/Url_Config";
-    
+import { consult_tags, search_image } from "../config/Url_Config";
+
 export const Wallpaper = () => {
   const { id } = useParams();
   const [wallpaper, setWallpaper] = React.useState(null);
+
+  const [tags, setTags] = React.useState(null);
+
+  useEffect(() => {
+    const Consultar_Etiquetas = async () => {
+      try {
+        const response = await fetch(`${consult_tags}?id_imagen=${id}`);
+        const data = await response.json();
+        console.log(`Etiquetas consultadas => ${data}`);
+
+        if (!data.Error) {
+          const dataTags = data.map((tag) => ({
+            id_etiqueta: tag.id_etiqueta,
+            nombre_etiqueta: tag.nombre_etiqueta,
+          }));
+
+          setTags(dataTags);
+        }
+      } catch (error) {
+        console.error(`Error al consultar etiquetas - ${error}`);
+      }
+    };
+
+    Consultar_Etiquetas();
+  }, [id]);
 
   useEffect(() => {
     const fetchWallpaperData = async () => {
@@ -42,10 +67,23 @@ export const Wallpaper = () => {
       <h1>Wallpaper</h1>
       {wallpaper && (
         <>
-          <img
+          <img className="wallpaper"
             src={wallpaper[0].url}
             alt={`Wallpaper ${wallpaper[0].id_imagen}`}
           />
+
+          {tags && (
+            <>
+              <ul className="tags-container">
+                {tags.map((tag) => (
+                  <li key={tag.id_etiqueta} className="tag">
+                    <p>{tag.nombre_etiqueta}</p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
           <div className="link-button">
             <Link to="">Editar Wallpaper</Link>
           </div>
