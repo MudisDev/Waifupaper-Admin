@@ -104,7 +104,7 @@ export const Perfil_Waifu = () => {
           <p></p>
           
             <div className="link-button">
-              <Link to="">Editar Perfil</Link>
+              <Link to={`/editar_waifu/${id}`}>Editar Perfil</Link>
             </div>
             <p></p>
             <div className="link-button">

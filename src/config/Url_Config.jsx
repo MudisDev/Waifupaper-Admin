@@ -1,4 +1,4 @@
-const domain = "http://192.168.1.10";
+const domain = "http://192.168.1.15";
 
 export const API_URL = `${domain}/waifupaper/api`;
 
@@ -17,6 +17,7 @@ export const show_count_total = `${list_path}/mostrar_total.php`;
 export const search_character = `${character_path}/buscar_personaje.php`;
 export const register_character = `${character_path}/registrar_personaje.php`;
 export const assign_personality = `${character_path}/asignar_personalidad.php`;
+export const edit_profile = `${character_path}/editar_perfil.php`;
 
 export const login_user = `${user_path}/iniciar_sesion.php`;
 
