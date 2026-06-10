@@ -1,4 +1,4 @@
-const domain = "http://192.168.1.15";
+const domain = "http://localhost";
 
 export const API_URL = `${domain}/waifupaper/api`;
 
@@ -13,6 +13,9 @@ export const show_kinds = `${list_path}/mostrar_especies.php`;
 export const show_personalities = `${list_path}/mostrar_personalidades.php`;
 export const show_images = `${list_path}/mostrar_imagenes.php`;
 export const show_count_total = `${list_path}/mostrar_total.php`;
+export const show_base_models = `${list_path}/mostrar_modelos_base.php`;
+export const show_lora_models = `${list_path}/mostrar_modelos_lora.php`;
+export const show_lora_models_for_image = `${list_path}/mostrar_modelos_lora_por_imagen.php`;
 
 export const search_character = `${character_path}/buscar_personaje.php`;
 export const register_character = `${character_path}/registrar_personaje.php`;
@@ -23,3 +26,5 @@ export const login_user = `${user_path}/iniciar_sesion.php`;
 
 export const search_image = `${image_path}/buscar_imagen.php`;
 export const consult_tags = `${image_path}/consultar_etiquetas.php`;
+export const edit_image = `${image_path}/editar_imagen.php`;
+export const show_characters_for_image = `${image_path}/mostrar_personajes.php`;

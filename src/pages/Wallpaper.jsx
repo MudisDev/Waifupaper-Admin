@@ -2,13 +2,46 @@ import React from "react";
 import NavBar from "../routes/NavBar";
 import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { consult_tags, search_image } from "../config/Url_Config";
+import {
+  consult_tags,
+  search_image,
+  show_characters_for_image,
+  show_lora_models_for_image,
+} from "../config/Url_Config";
 
 export const Wallpaper = () => {
   const { id } = useParams();
   const [wallpaper, setWallpaper] = React.useState(null);
 
   const [tags, setTags] = React.useState(null);
+  const [loras, setLoras] = React.useState(null);
+  const [characters, setCharacters] = React.useState(null);
+
+  useEffect(() => {
+    const Consultar_Personajes = async () => {
+      try {
+        const response = await fetch(
+          `${show_characters_for_image}?id_imagen=${id}`,
+        );
+        const data = await response.json();
+        console.log(`personajes consultados => ${data}`);
+
+        if (!data.Error) {
+          const dataCharacters = data.map((character) => ({
+            id_imagen: character.id_imagen,
+            id_personaje: character.id_personaje,
+            nombre: character.nombre,
+          }));
+
+          setCharacters(dataCharacters);
+        }
+      } catch (error) {
+        console.error(`Error al consultar personajes - ${error}`);
+      }
+    };
+
+    Consultar_Personajes();
+  }, [id]);
 
   useEffect(() => {
     const Consultar_Etiquetas = async () => {
@@ -31,6 +64,31 @@ export const Wallpaper = () => {
     };
 
     Consultar_Etiquetas();
+  }, [id]);
+
+  useEffect(() => {
+    const Consultar_Loras = async () => {
+      try {
+        const response = await fetch(
+          `${show_lora_models_for_image}?id_imagen=${id}`,
+        );
+        const data = await response.json();
+        console.log(`Loras consultados => ${data}`);
+
+        if (!data.Error) {
+          const dataLoras = data.map((lora) => ({
+            id_modelo_lora: lora.id_modelo_lora,
+            /* nombre_etiqueta: lora.nombre_etiqueta, */
+          }));
+
+          setLoras(dataLoras);
+        }
+      } catch (error) {
+        console.error(`Error al consultar loras - ${error}`);
+      }
+    };
+
+    Consultar_Loras();
   }, [id]);
 
   useEffect(() => {
@@ -67,7 +125,8 @@ export const Wallpaper = () => {
       <h1>Wallpaper</h1>
       {wallpaper && (
         <>
-          <img className="wallpaper"
+          <img
+            className="wallpaper"
             src={wallpaper[0].url}
             alt={`Wallpaper ${wallpaper[0].id_imagen}`}
           />
@@ -84,8 +143,36 @@ export const Wallpaper = () => {
             </>
           )}
 
+          <p>Waifus</p>
+          {characters && (
+            <>
+              <ul className="tags-container">
+                {characters.map((character) => (
+                  <li key={character.id_personaje} className="tag">
+                    {/* <p>{lora.nombre_lora}</p> */}
+                    <p>{character.nombre}</p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          <p>Modelos Loras</p>
+          {loras && (
+            <>
+              <ul className="tags-container">
+                {loras.map((lora) => (
+                  <li key={lora.id_modelo_lora} className="tag">
+                    {/* <p>{lora.nombre_lora}</p> */}
+                    <p>{lora.id_modelo_lora}</p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
           <div className="link-button">
-            <Link to="">Editar Wallpaper</Link>
+            <Link to={`/editar_wallpaper/${id}`}>Editar Wallpaper</Link>
           </div>
           <p></p>
           <p>ID Imagen: {wallpaper[0].id_imagen}</p>
