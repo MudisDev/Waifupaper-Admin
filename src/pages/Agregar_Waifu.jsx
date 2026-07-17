@@ -5,8 +5,9 @@ import { useEffect } from "react";
 import {
   show_kinds,
   show_personalities,
-  register_character,
   assign_personality,
+  image_server,
+  add_character,
 } from "../config/Url_Config";
 
 export const Agregar_Waifu = () => {
@@ -18,6 +19,8 @@ export const Agregar_Waifu = () => {
 
   const [personalities, setPersonalities] = React.useState([]);
   const [personalitySelected, setPersonalitySelected] = React.useState("");
+
+  const [waifuPersonalities, setWaifuPersonalities] = React.useState([]);
 
   const [nombre, setNombre] = React.useState("");
   const [alias, setAlias] = React.useState("");
@@ -84,8 +87,11 @@ export const Agregar_Waifu = () => {
   };
 
   const Registrar_Personaje = async (imageUrl) => {
+    const personalidades = waifuPersonalities.map(
+      (waifu) => waifu.id_personalidad,
+    );
     try {
-      const response = await fetch(`${register_character}?
+      const response = await fetch(`${add_character}?
       nombre=${nombre}&
                 alias=${alias}&
                 descripcion=${descripcion}&
@@ -96,17 +102,46 @@ export const Agregar_Waifu = () => {
                 mes=${mes}&
                 edad=${edad}&
                 id_especie=${specieSelected}&
-                imagen_perfil=${imageUrl}`);
+                imagen_perfil=${imageUrl}&
+                ids_personalidades=${personalidades}`);
       const data = await response.json();
       console.log("Respuesta registro personaje => ", data);
 
-      if (!data.Error) {
-        alert("Personaje registrado exitosamente");
-        Asignar_Personalidad(data.id_generado);
-      }
+
+      console.log("Estado de actualizacion -> ", data);
+      //SOLO REGRESA TRUE
+      //POR LO QUE AQUI MARCA QUE NO SE ACTUALIZO PERO SI LO HACE BV
+      if (!data.Error) alert("Personaje registrado exitosamente");
+      //Asignar_Personalidad(data.id_generado);
+      else alert("Error, el personaje no pudo ser registrado");
     } catch (e) {
       console.log(`Error al registrar personaje => ${e}`);
     }
+  };
+
+  const Registrar_Waifu = () => {
+    if (image) Subir_Imagen();
+  };
+
+  const Probar_Datos = () => {
+    const waifus = waifuPersonalities.map((waifu) => waifu.id_personalidad);
+
+    const variables = new URLSearchParams({
+      nombre: nombre,
+      alias: alias,
+      descripcion: descripcion,
+      historia: historia,
+      ocupacion: ocupacion,
+      pasatiempo: pasatiempo,
+      dia: dia,
+      mes: mes,
+      edad: edad,
+      id_especie: specieSelected,
+      ids_personalidades: waifus,
+      imagen_perfil: url,
+    });
+
+    console.log("Datos a subir -> ", variables);
   };
 
   const Subir_Imagen = async () => {
@@ -124,14 +159,11 @@ export const Agregar_Waifu = () => {
     }
 
     try {
-      const response = await fetch(
-        `https://mudisdev.com/waifupaper/src/php/api/gestor_imagenes/subir_imagen.php`,
-        {
-          //const response = await fetch(`${upload_image_to_server}`, {
-          method: "POST",
-          body: formData,
-        },
-      );
+      const response = await fetch(`${image_server}`, {
+        //const response = await fetch(`${upload_image_to_server}`, {
+        method: "POST",
+        body: formData,
+      });
 
       const data = await response.json();
       console.log("Respuesta subida imagen => ", data);
@@ -160,10 +192,36 @@ export const Agregar_Waifu = () => {
     dia != "" &&
     mes != "" &&
     edad != "" &&
-    personalitySelected != "" &&
+    waifuPersonalities.length == 0 &&
     specieSelected != ""
-      ? false
-      : true;
+      ? true
+      : false;
+
+  const Agregar_Personalidad = () => {
+    const personalidad = personalities.find(
+      (p) => p.id_personalidad == personalitySelected,
+    );
+    setWaifuPersonalities([
+      ...waifuPersonalities,
+      {
+        id_personalidad: personalidad.id_personalidad,
+        nombre: personalidad.nombre,
+      },
+    ]);
+
+    setPersonalitySelected("");
+  };
+
+  const Eliminar_Personalidad = (id_personalidad) => {
+    setWaifuPersonalities(
+      waifuPersonalities.filter((p) => p.id_personalidad !== id_personalidad),
+    );
+  };
+
+  const Personalidades_Disponibles = personalities.filter(
+    (p) =>
+      !waifuPersonalities.some((w) => w.id_personalidad == p.id_personalidad),
+  );
 
   return (
     <div>
@@ -240,24 +298,60 @@ export const Agregar_Waifu = () => {
           </select>
         )}
 
-        {personalities.length > 0 && (
-          <select
-            name="Personalidad"
-            value={personalitySelected}
-            onChange={(e) => setPersonalitySelected(e.target.value)}
-          >
-            <option value={""} /* disabled */>
-              Selecciona una personalidad
-            </option>
-            {personalities.map((personality) => (
-              <option
+        {waifuPersonalities.length > 0 ? (
+          <>
+            {waifuPersonalities.map((personality) => (
+              <div
                 key={personality.id_personalidad}
-                value={personality.id_personalidad}
+                style={{
+                  background: "red",
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: "10px",
+                }}
               >
-                {personality.nombre}
-              </option>
+                <div>{personality.nombre}</div>
+                <button
+                  onClick={() =>
+                    Eliminar_Personalidad(personality.id_personalidad)
+                  }
+                >
+                  X
+                </button>
+              </div>
             ))}
-          </select>
+          </>
+        ) : (
+          <p>No hay personalidades asignadas</p>
+        )}
+
+        {personalities.length > 0 && (
+          <>
+            <select
+              name="Personalidad"
+              value={personalitySelected}
+              onChange={(e) => setPersonalitySelected(e.target.value)}
+            >
+              <option value={""} disabled>
+                Selecciona una personalidad
+              </option>
+              {Personalidades_Disponibles.map((personality) => (
+                <option
+                  key={personality.id_personalidad}
+                  value={personality.id_personalidad}
+                >
+                  {personality.nombre}
+                </option>
+              ))}
+            </select>
+
+            <button
+              disabled={personalitySelected == ""}
+              onClick={Agregar_Personalidad}
+            >
+              Agregar Personalidad
+            </button>
+          </>
         )}
 
         <input
@@ -282,7 +376,8 @@ export const Agregar_Waifu = () => {
           </>
         )}
 
-        <button disabled={activateButton} onClick={() => Subir_Imagen()}>
+        {/* <button disabled={activateButton} onClick={() => Subir_Imagen()}> */}
+        <button disabled={activateButton} onClick={Registrar_Waifu}>
           Agregar Waifu
         </button>
       </div>

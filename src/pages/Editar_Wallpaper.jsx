@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import {
   consult_tags,
   edit_wallpaper,
+  image_server,
   //image_path,
   search_image,
   show_base_models,
@@ -446,7 +447,7 @@ export const Editar_Wallpaper = () => {
 
     try {
       const response = await fetch(
-        `https://mudisdev.com/waifupaper/src/php/api/gestor_imagenes/subir_imagen.php`,
+        `${image_server}`,
         {
           //const response = await fetch(`${upload_image_to_server}`, {
           method: "POST",

@@ -34,3 +34,6 @@ export const edit_image = `${image_path}/editar_imagen.php`;
 //export const show_characters_for_image = `${image_path}/mostrar_personajes.php`;
 
 export const edit_wallpaper = `${transaction_path}/editar_wallpaper.php`;
+export const add_character = `${transaction_path}/agregar_personaje.php`;
+
+export const image_server = `https://mudisdev.com/waifupaper/src/php/api/gestor_imagenes/subir_imagen.php`;
