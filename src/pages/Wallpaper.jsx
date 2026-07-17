@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import {
   consult_tags,
-  search_image,
+  search_view_image,
   show_characters_for_image,
   show_lora_models_for_image,
 } from "../config/Url_Config";
@@ -24,7 +24,7 @@ export const Wallpaper = () => {
           `${show_characters_for_image}?id_imagen=${id}`,
         );
         const data = await response.json();
-        console.log(`personajes consultados => ${data}`);
+        console.log(`personajes consultados => `, data);
 
         if (!data.Error) {
           const dataCharacters = data.map((character) => ({
@@ -78,6 +78,7 @@ export const Wallpaper = () => {
         if (!data.Error) {
           const dataLoras = data.map((lora) => ({
             id_modelo_lora: lora.id_modelo_lora,
+            nombre_modelo_lora: lora.nombre,
             /* nombre_etiqueta: lora.nombre_etiqueta, */
           }));
 
@@ -94,7 +95,7 @@ export const Wallpaper = () => {
   useEffect(() => {
     const fetchWallpaperData = async () => {
       try {
-        const response = await fetch(`${search_image}?id_imagen=${id}`);
+        const response = await fetch(`${search_view_image}?id_imagen=${id}`);
         const data = await response.json();
         console.log("Wallpaper data =>", data);
 
@@ -106,6 +107,7 @@ export const Wallpaper = () => {
             fecha_actualizacion: img.fecha_actualizacion,
             fecha_insercion: img.fecha_insercion,
             id_modelo_base: img.id_modelo_base,
+            nombre_modelo_base: img.nombre_modelo_base,
             semilla: img.semilla,
           }));
 
@@ -143,7 +145,7 @@ export const Wallpaper = () => {
             </>
           )}
 
-          <p>Waifus</p>
+          <p>Waifus en el Wallpaper</p>
           {characters && (
             <>
               <ul className="tags-container">
@@ -164,7 +166,8 @@ export const Wallpaper = () => {
                 {loras.map((lora) => (
                   <li key={lora.id_modelo_lora} className="tag">
                     {/* <p>{lora.nombre_lora}</p> */}
-                    <p>{lora.id_modelo_lora}</p>
+                    {/* <p>{lora.id_modelo_lora}</p> */}
+                    <p>{lora.nombre_modelo_lora}</p> 
                   </li>
                 ))}
               </ul>
@@ -180,6 +183,7 @@ export const Wallpaper = () => {
           <p>Fecha Actualización: {wallpaper[0].fecha_actualizacion}</p>
           <p>Fecha Inserción: {wallpaper[0].fecha_insercion}</p>
           <p>ID Modelo Base: {wallpaper[0].id_modelo_base}</p>
+          <p>Nombre Modelo Base: {wallpaper[0].nombre_modelo_base}</p>
           <p>Semilla: {wallpaper[0].semilla}</p>
         </>
       )}
