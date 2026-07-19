@@ -19,6 +19,7 @@ export const show_lora_models = `${list_path}/mostrar_modelos_lora.php`;
 export const show_lora_models_for_image = `${list_path}/mostrar_modelos_lora_por_imagen.php`;
 export const show_characters_for_image = `${list_path}/mostrar_personajes_por_imagen.php`;
 export const show_tags = `${list_path}/mostrar_etiquetas.php`;
+export const show_personalities_for_character = `${list_path}/mostrar_personalidades_por_personaje.php`;
 
 export const search_character = `${character_path}/buscar_personaje.php`;
 export const register_character = `${character_path}/registrar_personaje.php`;
@@ -35,5 +36,6 @@ export const edit_image = `${image_path}/editar_imagen.php`;
 
 export const edit_wallpaper = `${transaction_path}/editar_wallpaper.php`;
 export const add_character = `${transaction_path}/agregar_personaje.php`;
+export const edit_character = `${transaction_path}/editar_personaje.php`;
 
 export const image_server = `https://mudisdev.com/waifupaper/src/php/api/gestor_imagenes/subir_imagen.php`;
