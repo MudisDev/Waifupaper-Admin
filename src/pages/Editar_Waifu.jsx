@@ -9,129 +9,67 @@ import {
   show_personalities_for_character,
   edit_character,
 } from "../config/Url_Config";
+import { useFetch } from "../hooks/useFetch";
 
 export const Editar_Waifu = () => {
   const { id } = useParams();
-  const [waifu, setWaifu] = React.useState(null);
-  const [editWaifu, setEditWaifu] = React.useState(null);
-  const [isEditing, setIsEditing] = React.useState(false);
+
+  const { data: listaPersonalidades, fetchData: consultarPersonalidades } =
+    useFetch({ endpoint: show_personalities });
+
+  const {
+    data: personalidadesOriginales,
+    fetchData: consultarPersonalidadesWaifu,
+  } = useFetch({
+    endpoint: show_personalities_for_character,
+    params: { id_personaje: id },
+  });
+  const { data: waifuData, fetchData: consultarWaifu } = useFetch({
+    endpoint: search_character,
+    params: { id_personaje: id },
+    primerElemento: true,
+  });
+
+  const { data: listaEspecies, fetchData: consultarEspecies } = useFetch({
+    endpoint: show_kinds,
+  });
+
+  const [waifuOriginal, setWaifuOriginal] = React.useState(null);
+  const [waifuEditable, setWaifuEditable] = React.useState(null);
+
   const [image, setImage] = React.useState(null);
   const [preview, setPreview] = React.useState(null);
 
-  const [listaEspecies, setListaEspecies] = React.useState([]);
-  const [listaPersonalidades, setListaPersonalidades] = React.useState([]);
-  const [personalidadesWaifu, setPersonalidadesWaifu] = React.useState([]);
+  /* const [listaEspecies, setListaEspecies] = React.useState([]); */
+  /* const [listaPersonalidades, setListaPersonalidades] = React.useState([]); */
+  const [personalidadesEditables, setPersonalidadesEditables] = React.useState(
+    [],
+  );
 
   const [especieSeleccionada, setEspecieSeleccionada] = React.useState("");
   const [personalidadSeleccionada, setPersonalidadSeleccionada] =
     React.useState("");
 
   useEffect(() => {
-    const Consultar_Especies = async () => {
-      try {
-        const response = await fetch(`${show_kinds}`);
-        const data = await response.json();
-
-        console.log("Especies -> ", data);
-
-        if (Array.isArray(data) && data.length > 0) {
-          setListaEspecies(data);
-        }
-      } catch (e) {
-        console.log("No se pudo consultar Especies, error: ", e);
-      }
-    };
-
-    Consultar_Especies();
+    consultarPersonalidades();
+    consultarPersonalidadesWaifu();
+    consultarEspecies();
+    consultarWaifu();
   }, []);
 
   useEffect(() => {
-    const Consultar_Personalidades_Personaje = async () => {
-      try {
-        const response = await fetch(
-          `${show_personalities_for_character}?id_personaje=${id}`,
-        );
-        const data = await response.json();
-
-        console.log("Datos de personalidades de la waifu -> ", data);
-
-        if (data.length > 0) {
-          setPersonalidadesWaifu(data);
-        }
-      } catch (e) {
-        console.log(
-          "No se pudo consultar personalidades del personaje, error -> ",
-          e,
-        );
-      }
-    };
-
-    Consultar_Personalidades_Personaje();
-  }, []);
+    if (!Array.isArray(personalidadesOriginales)) return;
+    setPersonalidadesEditables(personalidadesOriginales);
+  }, [personalidadesOriginales]);
 
   useEffect(() => {
-    const Consultar_Personalidades = async () => {
-      try {
-        const response = await fetch(`${show_personalities}`);
-        const data = await response.json();
-
-        console.log("Personalidades -> ", data);
-
-        if (Array.isArray(data) && data.length > 0) {
-          setListaPersonalidades(data);
-        }
-      } catch (e) {
-        console.log("No se pudo consultar Personalidades, error: ", e);
-      }
-    };
-
-    Consultar_Personalidades();
-  }, []);
-
-  useEffect(() => {
-    const Consultar_Data = async () => {
-      try {
-        const response = await fetch(`${search_character}?id_personaje=${id}`);
-        const data = await response.json();
-
-        console.log("Data de la waifu -> ", data[0]);
-
-        if (!data.Error) {
-          const dataWaifu = {
-            id_personaje: data[0].id_personaje,
-            nombre: data[0].nombre,
-            imagen: data[0].imagen_perfil,
-            //id_persodata[0] "5",
-            alias: data[0].alias,
-            descripcion: data[0].descripcion,
-            historia: data[0].historia,
-            pasatiempo: data[0].pasatiempo,
-            ocupacion: data[0].ocupacion,
-            dia: data[0].dia,
-            mes: data[0].mes,
-            edad: data[0].edad,
-            especie: data[0].especie,
-            id_especie: data[0].id_especie,
-            personalidades: data[0].personalidades,
-          };
-          setWaifu(dataWaifu);
-          setEditWaifu({ ...dataWaifu }); // copia real
-        }
-      } catch (error) {
-        console.log("Error al consultar waifu -> ", error);
-      }
-    };
-
-    Consultar_Data();
-  }, []);
+    if (!waifuData) return;
+    setWaifuOriginal(waifuData);
+    setWaifuEditable({ ...waifuData });
+  }, [waifuData]);
 
   const Subir_Imagen = async () => {
     const formData = new FormData();
-    /* formData.append('username', username);
-        formData.append('password', password);
-        formData.append('name', name);
-        formData.append('phone', phoneNumber);
-        formData.append('email', email); */
 
     formData.append("id_personaje", 0);
 
@@ -152,12 +90,12 @@ export const Editar_Waifu = () => {
         console.log("IMAGEN SUBIDA => ", data);
 
         //setImage({ ...editWaifu, imagen: data.url });
-        setEditWaifu((prev) => ({
+        setWaifuEditable((prev) => ({
           ...prev,
-          imagen: data.url,
+          imagen_perfil: data.url,
         }));
 
-        console.log("Imagen subida EditWaifu =>", editWaifu.imagen);
+        console.log("Imagen subida EditWaifu =>", waifuEditable.imagen);
 
         //Actualizar_Perfil();
 
@@ -173,28 +111,31 @@ export const Editar_Waifu = () => {
   };
 
   const Actualizar_Perfil = async () => {
-    const personalidades = personalidadesWaifu
+    const personalidades = personalidadesEditables
       .map((pw) => pw.id_personalidad)
       .join(",");
     const params = new URLSearchParams({
-      id_personaje: String(editWaifu?.id_personaje),
-      nombre: editWaifu?.nombre,
-      alias: editWaifu?.alias,
-      descripcion: editWaifu?.descripcion,
-      historia: editWaifu?.historia,
-      pasatiempo: editWaifu?.pasatiempo,
-      ocupacion: editWaifu?.ocupacion,
-      dia: editWaifu?.dia,
-      mes: editWaifu?.mes,
-      edad: editWaifu?.edad,
-      id_especie: editWaifu?.id_especie,
-      //imagen_perfil: editWaifu?.profilePhoto || ''
-      imagen_perfil: editWaifu.imagen,
+      id_personaje: String(waifuEditable?.id_personaje),
+      nombre: waifuEditable?.nombre,
+      alias: waifuEditable?.alias,
+      descripcion: waifuEditable?.descripcion,
+      historia: waifuEditable?.historia,
+      pasatiempo: waifuEditable?.pasatiempo,
+      ocupacion: waifuEditable?.ocupacion,
+      dia: waifuEditable?.dia,
+      mes: waifuEditable?.mes,
+      edad: waifuEditable?.edad,
+      id_especie: waifuEditable?.id_especie,
+      //imagen_perfil: waifuEditable?.profilePhoto || ''
+      imagen_perfil: waifuEditable.imagen_perfil,
       ids_personalidades: personalidades,
     });
 
+
     console.log("Params -> ", params);
 
+
+    console.log("Data Origianl Waifu -> " , waifuOriginal);
     try {
       //const response = await fetch(`${edit_profile}?id_personaje=${id}&${params.toString()}`);
       const response = await fetch(`${edit_character}?${params.toString()}`);
@@ -214,37 +155,37 @@ export const Editar_Waifu = () => {
   };
 
   const Probar_Datos = () => {
-    const personalidades = personalidadesWaifu
+    const personalidades = personalidadesEditables
       .map((pw) => pw.id_personalidad)
       .join(",");
     const datos = new URLSearchParams({
       id_personaje: String(id),
-      nombre: editWaifu?.nombre,
-      alias: editWaifu?.alias,
-      descripcion: editWaifu?.descripcion,
-      historia: editWaifu?.historia,
-      pasatiempo: editWaifu?.pasatiempo,
-      ocupacion: editWaifu?.ocupacion,
-      dia: editWaifu?.dia,
-      mes: editWaifu?.mes,
-      edad: editWaifu?.edad,
+      nombre: waifuEditable?.nombre,
+      alias: waifuEditable?.alias,
+      descripcion: waifuEditable?.descripcion,
+      historia: waifuEditable?.historia,
+      pasatiempo: waifuEditable?.pasatiempo,
+      ocupacion: waifuEditable?.ocupacion,
+      dia: waifuEditable?.dia,
+      mes: waifuEditable?.mes,
+      edad: waifuEditable?.edad,
       //imagen_perfil: editWaifu?.profilePhoto || ''
-      imagen_perfil: editWaifu.imagen,
+      imagen_perfil: waifuEditable.imagen,
       ids_personalidades: personalidades,
     });
 
     console.log("Datos de Prueba -> ", datos);
   };
 
-  const Personalidades_Disponibles = listaPersonalidades.filter(
+  const personalidadesDisponibles = listaPersonalidades.filter(
     (lp) =>
-      !personalidadesWaifu.some(
+      !personalidadesEditables.some(
         (pw) => pw.id_personalidad == lp.id_personalidad,
       ),
   );
 
-  const Especies_Disponibles = listaEspecies.filter(
-    (le) => editWaifu?.id_especie !== le.id_especie,
+  const especiesDisponibles = listaEspecies.filter(
+    (le) => waifuEditable?.id_especie !== le.id_especie,
   );
 
   //console.log("Personalidades disponibles -> ", Personalidades_Disponibles);
@@ -253,8 +194,8 @@ export const Editar_Waifu = () => {
     const personalidad = listaPersonalidades.find(
       (wp) => wp.id_personalidad == personalidadSeleccionada,
     );
-    setPersonalidadesWaifu([
-      ...personalidadesWaifu,
+    setPersonalidadesEditables([
+      ...personalidadesEditables,
       {
         id_personaje: id,
         id_personalidad: personalidad.id_personalidad,
@@ -266,19 +207,17 @@ export const Editar_Waifu = () => {
   };
 
   const Eliminar_Personalidad = (id_p) => {
-    setPersonalidadesWaifu(
-      personalidadesWaifu.filter((pw) => pw.id_personalidad !== id_p),
+    setPersonalidadesEditables(
+      personalidadesEditables.filter((pw) => pw.id_personalidad !== id_p),
     );
   };
-
-  console.log("EditWaifu -> ", editWaifu);
 
   const Cambiar_Especie = () => {
     const especie = listaEspecies.find(
       (lista) => lista.id_especie == especieSeleccionada,
     );
-    setEditWaifu({
-      ...editWaifu,
+    setWaifuEditable({
+      ...waifuEditable,
       id_especie: especie.id_especie,
       especie: especie.nombre,
     });
@@ -286,103 +225,97 @@ export const Editar_Waifu = () => {
     setEspecieSeleccionada("");
   };
 
-  const isModified = JSON.stringify(waifu) !== JSON.stringify(editWaifu);
+  const isModified =
+    JSON.stringify(waifuOriginal) !== JSON.stringify(waifuEditable);
 
   return (
     <div>
       <NavBar />
       <h1>Editar Waifu {id}</h1>
 
-      {!waifu ? (
+      {!waifuOriginal ? (
         <p>Cargando waifu...</p>
       ) : (
         <>
           <div className="form-waifu-container">
             <input
               type="text"
-              value={editWaifu.nombre}
+              value={waifuEditable.nombre}
               onChange={(e) =>
-                setEditWaifu({ ...editWaifu, nombre: e.target.value })
+                setWaifuEditable({ ...waifuEditable, nombre: e.target.value })
               }
             />
             <input
               type="text"
-              value={editWaifu.alias}
+              value={waifuEditable.alias}
               onChange={(e) =>
-                setEditWaifu({ ...editWaifu, alias: e.target.value })
+                setWaifuEditable({ ...waifuEditable, alias: e.target.value })
               }
             />
-            <img src={editWaifu.imagen} style={{ width: 300 }} />
+            <img src={waifuEditable.imagen_perfil} style={{ width: 300 }} />
             <input
               type="text"
-              value={editWaifu.descripcion}
+              value={waifuEditable.descripcion}
               onChange={(e) =>
-                setEditWaifu({ ...editWaifu, descripcion: e.target.value })
-              }
-            />
-
-            <input
-              type="text"
-              value={editWaifu.historia}
-              onChange={(e) =>
-                setEditWaifu({ ...editWaifu, historia: e.target.value })
+                setWaifuEditable({
+                  ...waifuEditable,
+                  descripcion: e.target.value,
+                })
               }
             />
 
             <input
               type="text"
-              value={editWaifu.pasatiempo}
+              value={waifuEditable.historia}
               onChange={(e) =>
-                setEditWaifu({ ...editWaifu, pasatiempo: e.target.value })
+                setWaifuEditable({ ...waifuEditable, historia: e.target.value })
               }
             />
 
             <input
               type="text"
-              value={editWaifu.ocupacion}
+              value={waifuEditable.pasatiempo}
               onChange={(e) =>
-                setEditWaifu({ ...editWaifu, ocupacion: e.target.value })
+                setWaifuEditable({
+                  ...waifuEditable,
+                  pasatiempo: e.target.value,
+                })
+              }
+            />
+
+            <input
+              type="text"
+              value={waifuEditable.ocupacion}
+              onChange={(e) =>
+                setWaifuEditable({
+                  ...waifuEditable,
+                  ocupacion: e.target.value,
+                })
               }
             />
             <input
               type="number"
-              value={editWaifu.dia}
+              value={waifuEditable.dia}
               onChange={(e) =>
-                setEditWaifu({ ...editWaifu, dia: e.target.value })
+                setWaifuEditable({ ...waifuEditable, dia: e.target.value })
               }
             />
             <input
               type="number"
-              value={editWaifu.mes}
+              value={waifuEditable.mes}
               onChange={(e) =>
-                setEditWaifu({ ...editWaifu, mes: e.target.value })
+                setWaifuEditable({ ...waifuEditable, mes: e.target.value })
               }
             />
             <input
               type="number"
-              value={editWaifu.edad}
+              value={waifuEditable.edad}
               onChange={(e) =>
-                setEditWaifu({ ...editWaifu, edad: e.target.value })
+                setWaifuEditable({ ...waifuEditable, edad: e.target.value })
               }
             />
 
-            {/* <input
-              type="text"
-              value={editWaifu.especie}
-              onChange={(e) =>
-                setEditWaifu({ ...editWaifu, especie: e.target.value })
-              }
-            /> */}
-
-            {/* <input
-              type="text"
-              value={editWaifu.personalidades}
-              onChange={(e) =>
-                setEditWaifu({ ...editWaifu, personalidades: e.target.value })
-              }
-            /> */}
-
-            <p>Especie: {editWaifu.especie}</p>
+            <p>Especie: {waifuEditable.especie}</p>
 
             {listaEspecies.length > 0 ? (
               <>
@@ -394,7 +327,7 @@ export const Editar_Waifu = () => {
                   <option value={""} disabled>
                     Selecciona una especie
                   </option>
-                  {Especies_Disponibles.map((especie) => (
+                  {especiesDisponibles.map((especie) => (
                     <option key={especie.id_especie} value={especie.id_especie}>
                       {especie.nombre}
                     </option>
@@ -412,7 +345,7 @@ export const Editar_Waifu = () => {
             )}
             <p>Personalidades:</p>
             <div>
-              {personalidadesWaifu.length > 0 ? (
+              {personalidadesEditables.length > 0 ? (
                 <div
                   style={{
                     background: "purple",
@@ -422,7 +355,7 @@ export const Editar_Waifu = () => {
                     flexWrap: "wrap",
                   }}
                 >
-                  {personalidadesWaifu.map((personalidad) => (
+                  {personalidadesEditables.map((personalidad) => (
                     <div
                       key={personalidad.id_personalidad}
                       style={{
@@ -458,7 +391,7 @@ export const Editar_Waifu = () => {
                 <option value={""} disabled>
                   Selecciona una personalidad
                 </option>
-                {Personalidades_Disponibles.map((personalidad) => (
+                {personalidadesDisponibles.map((personalidad) => (
                   <option
                     key={personalidad.id_personalidad}
                     value={personalidad.id_personalidad}
@@ -479,7 +412,7 @@ export const Editar_Waifu = () => {
             Agregar Personalidad
           </button>
 
-          <p>Imagen: {waifu.imagen}</p>
+          <p>Imagen: {waifuEditable.imagen}</p>
 
           <input
             type="file"
@@ -505,7 +438,7 @@ export const Editar_Waifu = () => {
               />
               <p> preview - {preview} </p>
               <p> image - {image?.type} </p>
-              <p> EditWaifu - {editWaifu.imagen} </p>
+              <p> EditWaifu - {waifuEditable.imagen} </p>
 
               <button onClick={() => Subir_Imagen()}>Subir imagen</button>
             </>
