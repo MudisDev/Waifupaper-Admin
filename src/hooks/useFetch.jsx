@@ -5,10 +5,11 @@ export const useFetch = ({ endpoint, params = {}, primerElemento = false }) => {
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
 
-  const fetchData = async () => {
+  const fetchData = async (newParams = params) => {
     try {
       setLoading(true);
-      const query = new URLSearchParams(params);
+      const queryParams = newParams ?? params;
+      const query = new URLSearchParams(queryParams);
       const url = query.toString()
         ? `${endpoint}?${query.toString()}`
         : endpoint;
