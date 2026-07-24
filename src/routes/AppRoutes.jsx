@@ -19,7 +19,7 @@ export default function AppRoutes() {
       <Route path="/waifus" element={<Waifus />} />
       <Route path="/agregar_waifu" element={<Agregar_Waifu />} />
       <Route path="/editar_waifu/:id" element={<Editar_Waifu />} />
-      <Route path="/agregar_wallpapers" element={<Agregar_Wallpapers />} />
+      <Route path="/agregar_wallpapers/:id" element={<Agregar_Wallpapers />} />
       <Route path="/editar_wallpaper/:id" element={<Editar_Wallpaper />} />
       <Route path="/perfil_waifu/:id" element={<Perfil_Waifu />} />
       <Route path="/galeria" element={<Galeria />} />

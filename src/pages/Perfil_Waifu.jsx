@@ -108,7 +108,7 @@ export const Perfil_Waifu = () => {
             </div>
             <p></p>
             <div className="link-button">
-              <Link to="">Agregar Wallpaper</Link>
+              <Link to={`/agregar_wallpapers/${id}`}>Agregar Wallpaper</Link>
             </div>
        
 
