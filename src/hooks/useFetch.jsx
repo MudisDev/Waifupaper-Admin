@@ -13,7 +13,7 @@ export const useFetch = ({ endpoint, params = {}, primerElemento = false }) => {
       const url = query.toString()
         ? `${endpoint}?${query.toString()}`
         : endpoint;
-      console.log("URL -> ", url);
+      //console.log("URL -> ", url);
       const response = await fetch(url);
       const json = await response.json();
       setData(primerElemento ? json[0] : json);
