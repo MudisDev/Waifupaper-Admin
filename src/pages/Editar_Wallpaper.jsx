@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import {
   consult_tags,
   edit_wallpaper,
-  image_server,
   search_image,
   show_base_models,
   show_characters,
@@ -20,6 +19,7 @@ import Select from "react-select";
 import { useFetch } from "../hooks/useFetch";
 import { useArrayHelpers } from "../hooks/useArrayHelpers";
 import { useLoraEditor } from "../hooks/useLoraEditor";
+import { useUploadImage } from "../hooks/useUploadImage";
 
 export const Editar_Wallpaper = () => {
   const { id: id_wallpaper } = useParams();
@@ -117,6 +117,12 @@ export const Editar_Wallpaper = () => {
   const { agregarElementoObjetoArray, eliminarElementoObjetoArray } =
     useArrayHelpers();
   const { seleccionarLoraEdicion, guardarCambiosLora } = useLoraEditor();
+
+  const {
+    /* url: urlNueva, */
+    /*  error: errorUpload, */
+    subirImagen,
+  } = useUploadImage();
 
   useEffect(() => {
     consultarModelosLora();
@@ -237,9 +243,16 @@ export const Editar_Wallpaper = () => {
     }
   };
 
-  const Actualizar_Wallpaper = () => {
-    if (image) Subir_Imagen();
-    else Actualizar_Datos(null);
+  const waifus = wallpaperEditable.personajes.map((w) => w.id_personaje);
+
+  const waifu = waifus[0];
+  console.log("Primera Waifu -> ", waifu);
+
+  const Actualizar_Wallpaper = async () => {
+    let urlNueva = null;
+
+    if (image) urlNueva = await subirImagen({ waifu, image });
+    await Actualizar_Datos(urlNueva);
   };
 
   const Listar_Imagen = (dato) => {
@@ -399,19 +412,19 @@ export const Editar_Wallpaper = () => {
     console.log("Actualizacion de Prueba Bv -> ", variables);
   };
 
-  const Subir_Imagen = async () => {
-    /* const waifus = listaEditableWaifusWallpaper.map( */
+  /* const Subir_Imagen = async () => {
+    // const waifus = listaEditableWaifusWallpaper.map( 
     const waifus = wallpaperEditable.personajes.map(
       (waifu) => waifu.id_personaje,
     );
     const waifu = waifus[0];
 
     const formData = new FormData();
-    /* formData.append('username', username);
-        formData.append('password', password);
-        formData.append('name', name);
-        formData.append('phone', phoneNumber);
-        formData.append('email', email); */
+    // formData.append('username', username);
+    //    formData.append('password', password);
+    //    formData.append('name', name);
+    //    formData.append('phone', phoneNumber);
+    //    formData.append('email', email); 
 
     formData.append("id_personaje", waifu);
 
@@ -432,7 +445,7 @@ export const Editar_Wallpaper = () => {
         console.log("IMAGEN SUBIDA => ", data);
 
         Actualizar_Datos(data.url);
-        /* const booleanPublicImage = Boolean(publicImage); */
+        // const booleanPublicImage = Boolean(publicImage); 
       } else if (data.Error) {
         console.warn("error", data);
         //ShowAlert({ title: 'Error', text: 'Ocurrió un error durante el registro.', buttonOk: 'Ok', onConfirm: () => void {} });
@@ -440,7 +453,7 @@ export const Editar_Wallpaper = () => {
     } catch (e) {
       console.log(`Error al subir imagen al servidor => ${e}`);
     }
-  };
+  }; */
 
   return (
     <div>
