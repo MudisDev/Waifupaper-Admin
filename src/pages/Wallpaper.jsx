@@ -8,6 +8,7 @@ import {
   show_characters_for_image,
   show_lora_models_for_image,
 } from "../config/Url_Config";
+import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export const Wallpaper = () => {
   const { id } = useParams();
@@ -16,6 +17,12 @@ export const Wallpaper = () => {
   const [tags, setTags] = React.useState(null);
   const [loras, setLoras] = React.useState(null);
   const [characters, setCharacters] = React.useState(null);
+
+  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+
+  useEffect(() => {
+    VerificarAutorizacion();
+  }, []);
 
   useEffect(() => {
     const Consultar_Personajes = async () => {
@@ -167,7 +174,7 @@ export const Wallpaper = () => {
                   <li key={lora.id_modelo_lora} className="tag">
                     {/* <p>{lora.nombre_lora}</p> */}
                     {/* <p>{lora.id_modelo_lora}</p> */}
-                    <p>{lora.nombre_modelo_lora}</p> 
+                    <p>{lora.nombre_modelo_lora}</p>
                   </li>
                 ))}
               </ul>

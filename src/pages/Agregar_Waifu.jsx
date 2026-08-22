@@ -9,6 +9,7 @@ import {
   add_character,
 } from "../config/Url_Config";
 import { useFetch } from "../hooks/useFetch";
+import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export const Agregar_Waifu = () => {
   const [image, setImage] = React.useState(null);
@@ -19,6 +20,12 @@ export const Agregar_Waifu = () => {
   const [personalidadesEditables, setPersonalidadesEditables] = React.useState(
     [],
   );
+
+  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+
+  useEffect(() => {
+    VerificarAutorizacion();
+  }, []);
 
   const [waifuEditable, setWaifuEditable] = React.useState({
     nombre: "",

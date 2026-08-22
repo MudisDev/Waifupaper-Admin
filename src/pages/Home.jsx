@@ -3,11 +3,18 @@ import { Link } from "react-router-dom";
 import NavBar from "../routes/NavBar";
 import "../styles/appstyles.css";
 import { show_count_total } from "../config/Url_Config";
+import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export const Home = () => {
   const [wallpapers, setWallpapers] = React.useState(null);
   const [users, setUsers] = React.useState(null);
   const [waifus, setWaifus] = React.useState(null);
+
+  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+
+  useEffect(() => {
+    VerificarAutorizacion();
+  }, []);
 
   const fetchTotalWallpapers = async () => {
     try {

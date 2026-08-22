@@ -11,11 +11,15 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       const response = await fetch(
-        `${login_user}?username=${username}&password=${password}`,
+        `${login_user}?username=${username}&password=${password}&waifupaperControlPanel=true`,
+        { credentials: "include" },
       );
 
       const data = await response.json();
       console.log("Respuesta login:", data);
+
+/*       const texto = await response.text();
+      console.log("Respuesta de login -> ", texto); */
 
       if (!data.Error) {
         console.log(`usuario => ${data.username} - ${data.nombre}`);

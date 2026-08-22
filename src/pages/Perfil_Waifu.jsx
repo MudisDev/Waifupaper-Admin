@@ -5,14 +5,18 @@ import {
   search_character,
   show_images_for_character,
 } from "../config/Url_Config";
-//import { useLocation } from "react-router-dom";
+import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export const Perfil_Waifu = () => {
-  //const location = useLocation();
-  //const  {waifuData}  = location.state;
   const [waifuData, setWaifuData] = React.useState();
   const [wallpapers, setWallpapers] = React.useState([]);
   const { id } = useParams();
+
+  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+
+  useEffect(() => {
+    VerificarAutorizacion();
+  }, []);
 
   useEffect(() => {
     const Buscar_Wallpapers = async () => {
@@ -102,15 +106,14 @@ export const Perfil_Waifu = () => {
           <p>Especie: {waifuData.especie}</p>
           <p>Personalidades: {waifuData.personalidades}</p>
           <p></p>
-          
-            <div className="link-button">
-              <Link to={`/editar_waifu/${id}`}>Editar Perfil</Link>
-            </div>
-            <p></p>
-            <div className="link-button">
-              <Link to={`/agregar_wallpapers/${id}`}>Agregar Wallpaper</Link>
-            </div>
-       
+
+          <div className="link-button">
+            <Link to={`/editar_waifu/${id}`}>Editar Perfil</Link>
+          </div>
+          <p></p>
+          <div className="link-button">
+            <Link to={`/agregar_wallpapers/${id}`}>Agregar Wallpaper</Link>
+          </div>
 
           <p></p>
 

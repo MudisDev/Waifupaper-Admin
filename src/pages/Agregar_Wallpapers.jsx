@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import NavBar from "../routes/NavBar";
 import { useFetch } from "../hooks/useFetch";
 import {
-
   show_base_models,
   show_lora_models,
   show_characters,
@@ -14,6 +13,7 @@ import { useArrayHelpers } from "../hooks/useArrayHelpers";
 import { useLoraEditor } from "../hooks/useLoraEditor";
 import Select from "react-select";
 import { useUploadImage } from "../hooks/useUploadImage";
+import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export const Agregar_Wallpapers = () => {
   const { id: idWaifu } = useParams();
@@ -26,6 +26,12 @@ export const Agregar_Wallpapers = () => {
   const [preview, setPreview] = React.useState(null);
   const [modeloLoraSeleccionado, setModeloLoraSeleccionado] =
     React.useState("");
+
+  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+
+  useEffect(() => {
+    VerificarAutorizacion();
+  }, []);
 
   const crearWallpaper = () => ({
     id_wallpaper: null,
@@ -173,7 +179,6 @@ export const Agregar_Wallpapers = () => {
   };
 
   const probarSubida = () => {
-
     listaWallpapers.map((wallpaper) => {
       console.log("Wallpaper #", wallpaper.id_wallpaper);
 
@@ -226,7 +231,6 @@ export const Agregar_Wallpapers = () => {
   };
 
   const subirDatos = async (wallpaper, url_wallpaper_nuevo) => {
-    
     const etiquetas = wallpaper.etiquetas.map((tag) => tag.id_etiqueta);
     const waifus = wallpaper.personajes.map((waifu) => waifu.id_personaje);
     const loras = wallpaper.modelos_lora.map((lora) => lora.id_modelo_lora);

@@ -10,6 +10,7 @@ import {
   edit_character,
 } from "../config/Url_Config";
 import { useFetch } from "../hooks/useFetch";
+import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export const Editar_Waifu = () => {
   const [waifuOriginal, setWaifuOriginal] = React.useState(null);
@@ -47,6 +48,12 @@ export const Editar_Waifu = () => {
   const { data: waifuActualizada, fetchData: actualizarWaifu } = useFetch({
     endpoint: edit_character,
   });
+
+  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+
+  useEffect(() => {
+    VerificarAutorizacion();
+  }, []);
 
   useEffect(() => {
     consultarPersonalidades();

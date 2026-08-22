@@ -20,9 +20,16 @@ import { useFetch } from "../hooks/useFetch";
 import { useArrayHelpers } from "../hooks/useArrayHelpers";
 import { useLoraEditor } from "../hooks/useLoraEditor";
 import { useUploadImage } from "../hooks/useUploadImage";
+import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export const Editar_Wallpaper = () => {
   const { id: id_wallpaper } = useParams();
+
+  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+
+  useEffect(() => {
+    VerificarAutorizacion();
+  }, []);
 
   //const [wallpaper, setWallpaper] = useState(null);
   /* const [wallpaperOriginal, setWallpaperOriginal] = useState(null);

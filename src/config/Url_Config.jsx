@@ -1,6 +1,7 @@
 const domain = "http://localhost";
 
 export const API_URL = `${domain}/waifupaper/api`;
+export const utils = `${domain}/waifupaper/utils`;
 
 export const character_path = `${API_URL}/personaje`;
 export const list_path = `${API_URL}/lista`;
@@ -28,6 +29,8 @@ export const edit_profile = `${character_path}/editar_perfil.php`;
 
 export const login_user = `${user_path}/iniciar_sesion.php`;
 
+export const logout_user = `${utils}/cerrar_sesion.php`;
+
 export const search_image = `${image_path}/buscar_imagen.php`;
 export const search_view_image = `${image_path}/buscar_imagen_vista.php`;
 export const consult_tags = `${image_path}/consultar_etiquetas.php`;
@@ -39,3 +42,5 @@ export const add_character = `${transaction_path}/agregar_personaje.php`;
 export const edit_character = `${transaction_path}/editar_personaje.php`;
 
 export const image_server = `https://mudisdev.com/waifupaper/src/php/api/gestor_imagenes/subir_imagen.php`;
+
+export const check_auth = `${utils}/check_auth.php`;

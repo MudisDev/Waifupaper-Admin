@@ -3,9 +3,16 @@ import NavBar from "../routes/NavBar";
 import { useEffect } from "react";
 import { show_images } from "../config/Url_Config";
 import { Link } from "react-router-dom";
+import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export const Galeria = () => {
   const [imagenes, setImagenes] = React.useState([]);
+
+  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+
+  useEffect(() => {
+    VerificarAutorizacion();
+  }, []);
 
   useEffect(() => {
     const Cargar_Imagenes = async () => {
@@ -45,8 +52,8 @@ export const Galeria = () => {
         <div className="galeria-container">
           {imagenes.map((img) => (
             <div className="galeria-card" key={img.id_imagen}>
-                <Link to={`/wallpaper/${img.id_imagen}`}>
-              <img src={img.url} alt={`Imagen ${img.id_imagen}`} />
+              <Link to={`/wallpaper/${img.id_imagen}`}>
+                <img src={img.url} alt={`Imagen ${img.id_imagen}`} />
               </Link>
             </div>
           ))}

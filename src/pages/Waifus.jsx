@@ -3,9 +3,16 @@ import { Link } from "react-router-dom";
 import "../styles/appstyles.css";
 import { show_characters } from "../config/Url_Config";
 import NavBar from "../routes/NavBar";
+import Swal from "sweetalert2";
+import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export default function Waifus() {
   const [waifus, setWaifus] = useState([]);
+  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+
+  useEffect(() => {
+    VerificarAutorizacion();
+  }, []);
 
   useEffect(() => {
     //fetch("http://192.168.1.4/waifupaper/api/lista/mostrar_personajes.php")
