@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import NavBar from "../routes/NavBar";
+import "../styles/normalize.css";
 import "../styles/appstyles.css";
 import { show_count_total } from "../config/Url_Config";
 import { useCheckAuth } from "../hooks/useCheckAuth";
+import { Footer } from "../routes/Footer";
 
 export const Home = () => {
   const [wallpapers, setWallpapers] = React.useState(null);
@@ -65,24 +67,31 @@ export const Home = () => {
   }, []);
 
   return (
-    <div>
-      <NavBar />
-      <h1> WaifuPaper - Dashboard</h1>
-      <div className="dashboard-container">
-        <div className="dashboard-card">
-          Total Waifus <p></p>
-          {waifus}
+    <>
+      <header>
+        <NavBar />
+      </header>
+      <main>
+        <h1> WaifuPaper - Dashboard</h1>
+        <div className="dashboard-container">
+          <div className="dashboard-card">
+            Total Waifus <p></p>
+            {waifus}
+          </div>
+          <div className="dashboard-card">
+            Total Usuarios<p></p>
+            {users}
+          </div>
+          <div className="dashboard-card">
+            Total Wallpapers
+            <p></p>
+            {wallpapers}
+          </div>
         </div>
-        <div className="dashboard-card">
-          Total Usuarios<p></p>
-          {users}
-        </div>
-        <div className="dashboard-card">
-          Total Wallpapers
-          <p></p>
-          {wallpapers}
-        </div>
-      </div>
-    </div>
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+    </>
   );
 };

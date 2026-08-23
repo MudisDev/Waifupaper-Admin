@@ -14,6 +14,7 @@ import { useLoraEditor } from "../hooks/useLoraEditor";
 import Select from "react-select";
 import { useUploadImage } from "../hooks/useUploadImage";
 import { useCheckAuth } from "../hooks/useCheckAuth";
+import { Footer } from "../routes/Footer";
 
 export const Agregar_Wallpapers = () => {
   const { id: idWaifu } = useParams();
@@ -284,606 +285,616 @@ export const Agregar_Wallpapers = () => {
   };
 
   return (
-    <div>
-      <NavBar />
-      <h1>Agregar Wallpapers</h1>
+    <>
+      <header>
+        <NavBar />
+      </header>
+      <main>
+        <h1>Agregar Wallpapers</h1>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: 10,
-          /* background: "aquamarine", */
-          flexWrap: "wrap",
-          width: 800,
-          justifyContent: "center",
-        }}
-      >
-        {listaWallpapers.length > 0 ? (
-          <>
-            {listaWallpapers.map((wallpaper) => (
-              <button
-                key={wallpaper.id_wallpaper}
-                style={{
-                  padding: 10,
-                  width: 180,
-                  height: 320,
-
-                  ...(listo(wallpaper.id_wallpaper)
-                    ? { background: "green" }
-                    : { background: "red" }),
-                }}
-                disabled={modoEdicion}
-                onClick={() => seleccionarWallpaper(wallpaper.id_wallpaper)}
-              >
-                <img
-                  src={URL.createObjectURL(wallpaper.imagen_perfil)}
-                  width="100%"
-                  height="100%"
-                  style={{ borderRadius: 10, objectFit: "cover" }}
-                />
-              </button>
-            ))}
-          </>
-        ) : (
-          <p>No hay wallpapers agregados Bv</p>
-        )}
-      </div>
-      <p></p>
-
-      <input
-        type="file"
-        disabled={modoEdicion}
-        accept="image/*"
-        onChange={(e) => {
-          const file = e.target.files[0];
-          setImage(file);
-          if (file) setPreview(URL.createObjectURL(file));
-        }}
-      />
-
-      <p></p>
-
-      <button disabled={modoEdicion || !image} onClick={agregarWallpaper}>
-        Agregar Wallpaper
-      </button>
-
-      {modoEdicion ? (
-        <>
-          <p>Wallpaper #{wallpaperEditable.id_wallpaper}</p>
-
-          <p>Etiquetas del Wallpaper</p>
-
-          <div
-            style={{
-              width: "900px",
-              background: "gray",
-              display: "flex",
-              flexDirection: "row",
-              gap: "10px",
-              flexWrap: "wrap",
-            }}
-          >
-            {wallpaperEditable.etiquetas.length > 0 ? (
-              <>
-                {wallpaperEditable.etiquetas.map((tag) => (
-                  <div
-                    key={tag.id_etiqueta}
-                    style={{
-                      background: "black",
-                      width: "220px",
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: "10px",
-                    }}
-                  >
-                    <p>{tag.nombre_etiqueta}</p>
-                    <button
-                      onClick={() =>
-                        eliminarElementoObjetoArray(
-                          setWallpaperEditable,
-                          "etiquetas",
-                          "id_etiqueta",
-                          tag.id_etiqueta,
-                        )
-                      }
-                    >
-                      X
-                    </button>
-                  </div>
-                ))}
-              </>
-            ) : (
-              <>
-                <p>No hay etiquetas Bv</p>
-              </>
-            )}
-          </div>
-
-          <Select
-            //isMulti
-            //instanceId="lora-select"
-            instanceId={`Etiqueta`}
-            options={etiquetasDisponibles}
-            value={etiquetaSeleccionada}
-            onChange={setEtiquetaSeleccionada}
-            closeMenuOnSelect={true}
-            placeholder="Selecciona Etiquetas..."
-            styles={{
-              control: (base) => ({
-                ...base,
-                backgroundColor: "#1e1e1e",
-                border: "1px solid #444",
-                color: "white",
-              }),
-
-              menu: (base) => ({
-                ...base,
-                backgroundColor: "#1e1e1e",
-              }),
-
-              option: (base, state) => ({
-                ...base,
-                backgroundColor: state.isFocused ? "#333" : "#1e1e1e",
-                color: "white",
-              }),
-            }}
-          />
-
-          <button
-            disabled={!etiquetaSeleccionada}
-            onClick={() =>
-              agregarElementoObjetoArray(
-                setWallpaperEditable,
-                "etiquetas",
-                {
-                  id_etiqueta: etiquetaSeleccionada.value,
-                  nombre_etiqueta: etiquetaSeleccionada.label,
-                },
-                setEtiquetaSeleccionada,
-              )
-            }
-          >
-            Agregar Etiqueta
-          </button>
-
-          <p>Waifus en el Wallpaper:</p>
-
-          <div
-            style={{
-              width: "900px",
-              background: "yellow",
-              display: "flex",
-              flexDirection: "row",
-              gap: "10px",
-              flexWrap: "wrap",
-            }}
-          >
-            {/* {listaEditableWaifusWallpaper.length > 0 ? ( */}
-            {wallpaperEditable.personajes.length > 0 ? (
-              <>
-                {/* {listaEditableWaifusWallpaper.map((waifu) => ( */}
-                {wallpaperEditable.personajes.map((waifu) => (
-                  <div
-                    key={waifu.id_personaje}
-                    style={{
-                      background: "blue",
-                      width: "220px",
-                      display: "flex",
-                      flexDirection: "row",
-                    }}
-                  >
-                    <p>{waifu.nombre}</p>
-                    <button
-                      onClick={() =>
-                        eliminarElementoObjetoArray(
-                          /* setListaEditableWaifusWallpaper, */
-                          setWallpaperEditable,
-                          "personajes",
-                          "id_personaje",
-                          waifu.id_personaje,
-                        )
-                      }
-                    >
-                      X
-                    </button>
-                  </div>
-                ))}
-              </>
-            ) : (
-              <>
-                <p>No hay Waifus Bv</p>
-              </>
-            )}
-          </div>
-
-          <Select
-            //isMulti
-            //instanceId="lora-select"
-            instanceId={`waifu-${idWaifu}`}
-            options={waifusDisponibles}
-            value={waifuSeleccionada}
-            onChange={setWaifuSeleccionada}
-            closeMenuOnSelect={true}
-            placeholder="Selecciona Waifus..."
-            styles={{
-              control: (base) => ({
-                ...base,
-                backgroundColor: "#1e1e1e",
-                border: "1px solid #444",
-                color: "white",
-              }),
-
-              menu: (base) => ({
-                ...base,
-                backgroundColor: "#1e1e1e",
-              }),
-
-              option: (base, state) => ({
-                ...base,
-                backgroundColor: state.isFocused ? "#333" : "#1e1e1e",
-                color: "white",
-              }),
-            }}
-          />
-
-          <button
-            disabled={!waifuSeleccionada}
-            onClick={() =>
-              agregarElementoObjetoArray(
-                /* setListaEditableWaifusWallpaper, */
-
-                setWallpaperEditable,
-                "personajes",
-                {
-                  //id_imagen: id_wallpaper,
-                  id_personaje: waifuSeleccionada.value,
-                  nombre: waifuSeleccionada.label,
-                },
-                setWaifuSeleccionada,
-              )
-            }
-          >
-            Agregar Waifu
-          </button>
-
-          <p>semilla</p>
-
-          <input
-            type="text"
-            value={wallpaperEditable.semilla}
-            onChange={(e) =>
-              setWallpaperEditable({
-                ...wallpaperEditable,
-                semilla: e.target.value,
-              })
-            }
-          />
-
-          <p>Prompts generales</p>
-
-          <input
-            type="text"
-            placeholder="Prompt Positivo General"
-            value={wallpaperEditable.prompt_positivo_general}
-            //disabled={!loraEdicion.id_modelo_lora}
-            onChange={(e) =>
-              setWallpaperEditable((stateAnterior) => ({
-                ...stateAnterior,
-                prompt_positivo_general: e.target.value,
-              }))
-            }
-          />
-          <p></p>
-          <input
-            type="text"
-            placeholder="Prompt Negativo General"
-            value={wallpaperEditable.prompt_negativo_general}
-            //disabled={!loraEdicion.id_modelo_lora}
-            onChange={(e) =>
-              setWallpaperEditable((stateAnterior) => ({
-                ...stateAnterior,
-                prompt_negativo_general: e.target.value,
-              }))
-            }
-          />
-
-          <p>imagen listada</p>
-
-          <p></p>
-
-          {wallpaperEditable.imagen_listada == 1 ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 10,
+            /* background: "aquamarine", */
+            flexWrap: "wrap",
+            width: 800,
+            justifyContent: "center",
+          }}
+        >
+          {listaWallpapers.length > 0 ? (
             <>
-              <button onClick={() => Listar_Imagen(0)}>
-                <ion-icon name="eye-outline"></ion-icon>
-              </button>
-              <p style={{ fontWeight: "bold" }}>Listada</p>
+              {listaWallpapers.map((wallpaper) => (
+                <button
+                  key={wallpaper.id_wallpaper}
+                  style={{
+                    padding: 10,
+                    width: 180,
+                    height: 320,
+
+                    ...(listo(wallpaper.id_wallpaper)
+                      ? { background: "green" }
+                      : { background: "red" }),
+                  }}
+                  disabled={modoEdicion}
+                  onClick={() => seleccionarWallpaper(wallpaper.id_wallpaper)}
+                >
+                  <img
+                    src={URL.createObjectURL(wallpaper.imagen_perfil)}
+                    width="100%"
+                    height="100%"
+                    style={{ borderRadius: 10, objectFit: "cover" }}
+                  />
+                </button>
+              ))}
             </>
           ) : (
-            <>
-              <button onClick={() => Listar_Imagen(1)}>
-                <ion-icon name="eye-off-outline"></ion-icon>
-              </button>
-              <p style={{ fontWeight: "bold" }}>No listada</p>
-            </>
+            <p>No hay wallpapers agregados Bv</p>
           )}
+        </div>
+        <p></p>
 
-          <p></p>
+        <input
+          type="file"
+          disabled={modoEdicion}
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            setImage(file);
+            if (file) setPreview(URL.createObjectURL(file));
+          }}
+        />
 
-          <p>id modelo base - {wallpaperEditable?.id_modelo_base} </p>
-          <p></p>
-          {listaModelosBase.length > 0 ? (
-            <select
-              value={wallpaperEditable.id_modelo_base}
+        <p></p>
+
+        <button disabled={modoEdicion || !image} onClick={agregarWallpaper}>
+          Agregar Wallpaper
+        </button>
+
+        {modoEdicion ? (
+          <>
+            <p>Wallpaper #{wallpaperEditable.id_wallpaper}</p>
+
+            <p>Etiquetas del Wallpaper</p>
+
+            <div
+              style={{
+                width: "900px",
+                background: "gray",
+                display: "flex",
+                flexDirection: "row",
+                gap: "10px",
+                flexWrap: "wrap",
+              }}
+            >
+              {wallpaperEditable.etiquetas.length > 0 ? (
+                <>
+                  {wallpaperEditable.etiquetas.map((tag) => (
+                    <div
+                      key={tag.id_etiqueta}
+                      style={{
+                        background: "black",
+                        width: "220px",
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "10px",
+                      }}
+                    >
+                      <p>{tag.nombre_etiqueta}</p>
+                      <button
+                        onClick={() =>
+                          eliminarElementoObjetoArray(
+                            setWallpaperEditable,
+                            "etiquetas",
+                            "id_etiqueta",
+                            tag.id_etiqueta,
+                          )
+                        }
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <p>No hay etiquetas Bv</p>
+                </>
+              )}
+            </div>
+
+            <Select
+              //isMulti
+              //instanceId="lora-select"
+              instanceId={`Etiqueta`}
+              options={etiquetasDisponibles}
+              value={etiquetaSeleccionada}
+              onChange={setEtiquetaSeleccionada}
+              closeMenuOnSelect={true}
+              placeholder="Selecciona Etiquetas..."
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  backgroundColor: "#1e1e1e",
+                  border: "1px solid #444",
+                  color: "white",
+                }),
+
+                menu: (base) => ({
+                  ...base,
+                  backgroundColor: "#1e1e1e",
+                }),
+
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isFocused ? "#333" : "#1e1e1e",
+                  color: "white",
+                }),
+              }}
+            />
+
+            <button
+              disabled={!etiquetaSeleccionada}
+              onClick={() =>
+                agregarElementoObjetoArray(
+                  setWallpaperEditable,
+                  "etiquetas",
+                  {
+                    id_etiqueta: etiquetaSeleccionada.value,
+                    nombre_etiqueta: etiquetaSeleccionada.label,
+                  },
+                  setEtiquetaSeleccionada,
+                )
+              }
+            >
+              Agregar Etiqueta
+            </button>
+
+            <p>Waifus en el Wallpaper:</p>
+
+            <div
+              style={{
+                width: "900px",
+                background: "yellow",
+                display: "flex",
+                flexDirection: "row",
+                gap: "10px",
+                flexWrap: "wrap",
+              }}
+            >
+              {/* {listaEditableWaifusWallpaper.length > 0 ? ( */}
+              {wallpaperEditable.personajes.length > 0 ? (
+                <>
+                  {/* {listaEditableWaifusWallpaper.map((waifu) => ( */}
+                  {wallpaperEditable.personajes.map((waifu) => (
+                    <div
+                      key={waifu.id_personaje}
+                      style={{
+                        background: "blue",
+                        width: "220px",
+                        display: "flex",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <p>{waifu.nombre}</p>
+                      <button
+                        onClick={() =>
+                          eliminarElementoObjetoArray(
+                            /* setListaEditableWaifusWallpaper, */
+                            setWallpaperEditable,
+                            "personajes",
+                            "id_personaje",
+                            waifu.id_personaje,
+                          )
+                        }
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <p>No hay Waifus Bv</p>
+                </>
+              )}
+            </div>
+
+            <Select
+              //isMulti
+              //instanceId="lora-select"
+              instanceId={`waifu-${idWaifu}`}
+              options={waifusDisponibles}
+              value={waifuSeleccionada}
+              onChange={setWaifuSeleccionada}
+              closeMenuOnSelect={true}
+              placeholder="Selecciona Waifus..."
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  backgroundColor: "#1e1e1e",
+                  border: "1px solid #444",
+                  color: "white",
+                }),
+
+                menu: (base) => ({
+                  ...base,
+                  backgroundColor: "#1e1e1e",
+                }),
+
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isFocused ? "#333" : "#1e1e1e",
+                  color: "white",
+                }),
+              }}
+            />
+
+            <button
+              disabled={!waifuSeleccionada}
+              onClick={() =>
+                agregarElementoObjetoArray(
+                  /* setListaEditableWaifusWallpaper, */
+
+                  setWallpaperEditable,
+                  "personajes",
+                  {
+                    //id_imagen: id_wallpaper,
+                    id_personaje: waifuSeleccionada.value,
+                    nombre: waifuSeleccionada.label,
+                  },
+                  setWaifuSeleccionada,
+                )
+              }
+            >
+              Agregar Waifu
+            </button>
+
+            <p>semilla</p>
+
+            <input
+              type="text"
+              value={wallpaperEditable.semilla}
               onChange={(e) =>
                 setWallpaperEditable({
                   ...wallpaperEditable,
-                  id_modelo_base: e.target.value,
+                  semilla: e.target.value,
                 })
               }
-            >
-              {/* <option value={""}  disabled >
-                Selecciona un modelo base */}
-              <option value={""} /* disabled */>
-                Selecciona un modelo base
-              </option>
-              {listaModelosBase.map((model) => (
-                <option key={model.id_modelo_base} value={model.id_modelo_base}>
-                  {model.nombre}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <>
-              <p>No se han cargado los modelos base</p>
-            </>
-          )}
+            />
 
-          <p>loras</p>
-          {wallpaperEditable.modelos_lora.length > 0 ? (
+            <p>Prompts generales</p>
+
+            <input
+              type="text"
+              placeholder="Prompt Positivo General"
+              value={wallpaperEditable.prompt_positivo_general}
+              //disabled={!loraEdicion.id_modelo_lora}
+              onChange={(e) =>
+                setWallpaperEditable((stateAnterior) => ({
+                  ...stateAnterior,
+                  prompt_positivo_general: e.target.value,
+                }))
+              }
+            />
+            <p></p>
+            <input
+              type="text"
+              placeholder="Prompt Negativo General"
+              value={wallpaperEditable.prompt_negativo_general}
+              //disabled={!loraEdicion.id_modelo_lora}
+              onChange={(e) =>
+                setWallpaperEditable((stateAnterior) => ({
+                  ...stateAnterior,
+                  prompt_negativo_general: e.target.value,
+                }))
+              }
+            />
+
+            <p>imagen listada</p>
+
+            <p></p>
+
+            {wallpaperEditable.imagen_listada == 1 ? (
+              <>
+                <button onClick={() => Listar_Imagen(0)}>
+                  <ion-icon name="eye-outline"></ion-icon>
+                </button>
+                <p style={{ fontWeight: "bold" }}>Listada</p>
+              </>
+            ) : (
+              <>
+                <button onClick={() => Listar_Imagen(1)}>
+                  <ion-icon name="eye-off-outline"></ion-icon>
+                </button>
+                <p style={{ fontWeight: "bold" }}>No listada</p>
+              </>
+            )}
+
+            <p></p>
+
+            <p>id modelo base - {wallpaperEditable?.id_modelo_base} </p>
+            <p></p>
+            {listaModelosBase.length > 0 ? (
+              <select
+                value={wallpaperEditable.id_modelo_base}
+                onChange={(e) =>
+                  setWallpaperEditable({
+                    ...wallpaperEditable,
+                    id_modelo_base: e.target.value,
+                  })
+                }
+              >
+                {/* <option value={""}  disabled >
+                Selecciona un modelo base */}
+                <option value={""} /* disabled */>
+                  Selecciona un modelo base
+                </option>
+                {listaModelosBase.map((model) => (
+                  <option
+                    key={model.id_modelo_base}
+                    value={model.id_modelo_base}
+                  >
+                    {model.nombre}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <>
+                <p>No se han cargado los modelos base</p>
+              </>
+            )}
+
+            <p>loras</p>
+            {wallpaperEditable.modelos_lora.length > 0 ? (
+              <div
+                style={{
+                  background: "green",
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 10,
+                }}
+              >
+                {wallpaperEditable.modelos_lora.map((lora) => (
+                  <div
+                    key={lora.id_modelo_lora}
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      background: "gray",
+                    }}
+                  >
+                    <p>
+                      #{lora.id_modelo_lora} - {lora.nombre}
+                    </p>
+                    <button>X</button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div>
+                <p>No hay LoRas Bv</p>
+              </div>
+            )}
+
+            <p style={{ fontWeight: "bold" }}>Loras del Wallpaper</p>
+
             <div
               style={{
+                width: "900px",
                 background: "green",
-                width: "100%",
                 display: "flex",
                 flexDirection: "row",
                 gap: 10,
+                flexWrap: "wrap",
               }}
             >
               {wallpaperEditable.modelos_lora.map((lora) => (
                 <div
                   key={lora.id_modelo_lora}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    background: "gray",
-                  }}
+                  style={{ background: "white", width: "100%" }}
                 >
-                  <p>
-                    #{lora.id_modelo_lora} - {lora.nombre}
-                  </p>
-                  <button>X</button>
+                  <div
+                    style={{
+                      background: "red",
+                      width: "250px",
+                      gap: "10px",
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <p>{lora.nombre}</p>
+                    <p>F {lora.fuerza}</p>
+                    <button
+                      onClick={() =>
+                        eliminarElementoObjetoArray(
+                          setWallpaperEditable,
+                          "modelos_lora",
+                          "id_modelo_lora",
+                          lora.id_modelo_lora,
+                        )
+                      }
+                    >
+                      X
+                    </button>
+                  </div>
+
+                  <div
+                    style={{
+                      background: "red",
+                      width: "250px",
+                      gap: "10px",
+                      /*  display: "flex",
+                              flexDirection: "row", */
+                    }}
+                  >
+                    <p>P+ {lora.prompt_positivo}</p>
+                  </div>
+
+                  <div
+                    style={{
+                      background: "red",
+                      width: "250px",
+                      gap: "10px",
+                      /*  display: "flex",
+                              flexDirection: "row", */
+                    }}
+                  >
+                    <p>P- {lora.prompt_negativo}</p>
+                  </div>
+
+                  <div
+                    style={{
+                      background: "red",
+                      width: "250px",
+                      gap: "10px",
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <button
+                      onClick={() =>
+                        seleccionarLoraEdicion(
+                          wallpaperEditable,
+                          lora.id_modelo_lora,
+                          setLoraEdicion,
+                        )
+                      }
+                    >
+                      Editar este lora Bv
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
-          ) : (
-            <div>
-              <p>No hay LoRas Bv</p>
-            </div>
-          )}
 
-          <p style={{ fontWeight: "bold" }}>Loras del Wallpaper</p>
+            <p>Editar Lora</p>
 
-          <div
-            style={{
-              width: "900px",
-              background: "green",
-              display: "flex",
-              flexDirection: "row",
-              gap: 10,
-              flexWrap: "wrap",
-            }}
-          >
-            {wallpaperEditable.modelos_lora.map((lora) => (
-              <div
-                key={lora.id_modelo_lora}
-                style={{ background: "white", width: "100%" }}
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <input
+                type="text"
+                placeholder="Prompt Positivo"
+                value={loraEdicion.prompt_positivo}
+                disabled={!loraEdicion.id_modelo_lora}
+                onChange={(e) =>
+                  setLoraEdicion((stateAnterior) => ({
+                    ...stateAnterior,
+                    prompt_positivo: e.target.value,
+                  }))
+                }
+              />
+              <input
+                type="text"
+                placeholder="Prompt Negativo"
+                value={loraEdicion.prompt_negativo}
+                disabled={!loraEdicion.id_modelo_lora}
+                onChange={(e) =>
+                  setLoraEdicion((stateAnterior) => ({
+                    ...stateAnterior,
+                    prompt_negativo: e.target.value,
+                  }))
+                }
+              />
+              <input
+                type="text"
+                placeholder="Fuerza LoRa"
+                value={loraEdicion.fuerza}
+                disabled={!loraEdicion.id_modelo_lora}
+                onChange={(e) => {
+                  setLoraEdicion((stateAnterior) => ({
+                    ...stateAnterior,
+                    fuerza: e.target.value,
+                  }));
+                }}
+              />
+              <button
+                disabled={
+                  loraEdicion.fuerza == "" ||
+                  loraEdicion.prompt_negativo == "" ||
+                  loraEdicion.prompt_positivo == "" ||
+                  !loraEdicion.id_modelo_lora
+                }
+                onClick={() =>
+                  guardarCambiosLora(setWallpaperEditable, loraEdicion, () =>
+                    setLoraEdicion(crearLora()),
+                  )
+                }
               >
-                <div
-                  style={{
-                    background: "red",
-                    width: "250px",
-                    gap: "10px",
-                    display: "flex",
-                    flexDirection: "row",
-                  }}
-                >
-                  <p>{lora.nombre}</p>
-                  <p>F {lora.fuerza}</p>
-                  <button
-                    onClick={() =>
-                      eliminarElementoObjetoArray(
-                        setWallpaperEditable,
-                        "modelos_lora",
-                        "id_modelo_lora",
-                        lora.id_modelo_lora,
-                      )
-                    }
-                  >
-                    X
-                  </button>
-                </div>
+                Guardar cambios en LoRa
+              </button>
+            </div>
+            <p></p>
+            <Select
+              //isMulti
+              //instanceId="lora-select"
+              instanceId={`lora-${idWaifu}`}
+              options={lorasDisponibles}
+              value={modeloLoraSeleccionado}
+              onChange={setModeloLoraSeleccionado}
+              closeMenuOnSelect={true}
+              placeholder="Selecciona Loras..."
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  backgroundColor: "#1e1e1e",
+                  border: "1px solid #444",
+                  color: "white",
+                }),
 
-                <div
-                  style={{
-                    background: "red",
-                    width: "250px",
-                    gap: "10px",
-                    /*  display: "flex",
-                              flexDirection: "row", */
-                  }}
-                >
-                  <p>P+ {lora.prompt_positivo}</p>
-                </div>
+                menu: (base) => ({
+                  ...base,
+                  backgroundColor: "#1e1e1e",
+                }),
 
-                <div
-                  style={{
-                    background: "red",
-                    width: "250px",
-                    gap: "10px",
-                    /*  display: "flex",
-                              flexDirection: "row", */
-                  }}
-                >
-                  <p>P- {lora.prompt_negativo}</p>
-                </div>
-
-                <div
-                  style={{
-                    background: "red",
-                    width: "250px",
-                    gap: "10px",
-                    display: "flex",
-                    flexDirection: "row",
-                  }}
-                >
-                  <button
-                    onClick={() =>
-                      seleccionarLoraEdicion(
-                        wallpaperEditable,
-                        lora.id_modelo_lora,
-                        setLoraEdicion,
-                      )
-                    }
-                  >
-                    Editar este lora Bv
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <p>Editar Lora</p>
-
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <input
-              type="text"
-              placeholder="Prompt Positivo"
-              value={loraEdicion.prompt_positivo}
-              disabled={!loraEdicion.id_modelo_lora}
-              onChange={(e) =>
-                setLoraEdicion((stateAnterior) => ({
-                  ...stateAnterior,
-                  prompt_positivo: e.target.value,
-                }))
-              }
-            />
-            <input
-              type="text"
-              placeholder="Prompt Negativo"
-              value={loraEdicion.prompt_negativo}
-              disabled={!loraEdicion.id_modelo_lora}
-              onChange={(e) =>
-                setLoraEdicion((stateAnterior) => ({
-                  ...stateAnterior,
-                  prompt_negativo: e.target.value,
-                }))
-              }
-            />
-            <input
-              type="text"
-              placeholder="Fuerza LoRa"
-              value={loraEdicion.fuerza}
-              disabled={!loraEdicion.id_modelo_lora}
-              onChange={(e) => {
-                setLoraEdicion((stateAnterior) => ({
-                  ...stateAnterior,
-                  fuerza: e.target.value,
-                }));
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isFocused ? "#333" : "#1e1e1e",
+                  color: "white",
+                }),
               }}
             />
+
             <button
-              disabled={
-                loraEdicion.fuerza == "" ||
-                loraEdicion.prompt_negativo == "" ||
-                loraEdicion.prompt_positivo == "" ||
-                !loraEdicion.id_modelo_lora
-              }
+              disabled={!modeloLoraSeleccionado}
               onClick={() =>
-                guardarCambiosLora(setWallpaperEditable, loraEdicion, () =>
-                  setLoraEdicion(crearLora()),
+                agregarElementoObjetoArray(
+                  setWallpaperEditable,
+                  "modelos_lora",
+                  {
+                    id_modelo_lora: modeloLoraSeleccionado.value,
+                    nombre: modeloLoraSeleccionado.label,
+                    prompt_positivo: "",
+                    prompt_negativo: "",
+                    fuerza: "",
+                  },
+                  setModeloLoraSeleccionado,
                 )
               }
             >
-              Guardar cambios en LoRa
+              Agregar Lora
             </button>
-          </div>
-          <p></p>
-          <Select
-            //isMulti
-            //instanceId="lora-select"
-            instanceId={`lora-${idWaifu}`}
-            options={lorasDisponibles}
-            value={modeloLoraSeleccionado}
-            onChange={setModeloLoraSeleccionado}
-            closeMenuOnSelect={true}
-            placeholder="Selecciona Loras..."
-            styles={{
-              control: (base) => ({
-                ...base,
-                backgroundColor: "#1e1e1e",
-                border: "1px solid #444",
-                color: "white",
-              }),
+            <p></p>
 
-              menu: (base) => ({
-                ...base,
-                backgroundColor: "#1e1e1e",
-              }),
-
-              option: (base, state) => ({
-                ...base,
-                backgroundColor: state.isFocused ? "#333" : "#1e1e1e",
-                color: "white",
-              }),
-            }}
-          />
-
-          <button
-            disabled={!modeloLoraSeleccionado}
-            onClick={() =>
-              agregarElementoObjetoArray(
-                setWallpaperEditable,
-                "modelos_lora",
-                {
-                  id_modelo_lora: modeloLoraSeleccionado.value,
-                  nombre: modeloLoraSeleccionado.label,
-                  prompt_positivo: "",
-                  prompt_negativo: "",
-                  fuerza: "",
-                },
-                setModeloLoraSeleccionado,
-              )
-            }
-          >
-            Agregar Lora
-          </button>
-          <p></p>
-
-          <button onClick={() => guardarCambiosWallpaper()}>
-            Finalizar Edicion
-          </button>
-        </>
-      ) : (
-        <>
-          <p>Selecciona un Wallpaper para editarlo</p>
-        </>
-      )}
-      {!modoEdicion && listaWallpapers.length > 0 && (
-        <>
-          <button onClick={subirWallpapers}>Subir Wallpapers</button>
-        </>
-      )}
-    </div>
+            <button onClick={() => guardarCambiosWallpaper()}>
+              Finalizar Edicion
+            </button>
+          </>
+        ) : (
+          <>
+            <p>Selecciona un Wallpaper para editarlo</p>
+          </>
+        )}
+        {!modoEdicion && listaWallpapers.length > 0 && (
+          <>
+            <button onClick={subirWallpapers}>Subir Wallpapers</button>
+          </>
+        )}
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+    </>
   );
 };

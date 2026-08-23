@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { login_user } from "../config/Url_Config";
+import { Footer } from "../routes/Footer";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function Login() {
       const data = await response.json();
       console.log("Respuesta login:", data);
 
-/*       const texto = await response.text();
+      /*       const texto = await response.text();
       console.log("Respuesta de login -> ", texto); */
 
       if (!data.Error) {
@@ -26,6 +27,7 @@ export default function Login() {
         navigate("/home"); // 👈 redirigir
       } else {
         console.log("Login failed: Invalid credentials");
+        alert("Error, crendenciales inválidas.");
       }
     } catch (error) {
       console.error("Login failed:", error);
@@ -40,35 +42,41 @@ export default function Login() {
   const disabledButton = username != "" && password != "" ? true : false;
 
   return (
-    <div>
-      <h1>WaifuPaper - Panel Admin</h1>
-      <h2>Login</h2>
+    <>
+      <header></header>
+      <main>
+        <h1>WaifuPaper - Panel Admin</h1>
+        <h2>Login</h2>
 
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username:
+        <form onSubmit={handleSubmit}>
+          <label>
+            Username:
+            <p></p>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </label>
           <p></p>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
-        <p></p>
-        <label>
-          Password:
+          <label>
+            Password:
+            <p></p>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
           <p></p>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <p></p>
-        <button type="submit" disabled={!disabledButton}>
-          Submit
-        </button>
-      </form>
-    </div>
+          <button type="submit" disabled={!disabledButton}>
+            Submit
+          </button>
+        </form>
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+    </>
   );
 }

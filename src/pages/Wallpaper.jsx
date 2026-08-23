@@ -8,6 +8,7 @@ import {
   show_characters_for_image,
   show_lora_models_for_image,
 } from "../config/Url_Config";
+import { Footer } from "../routes/Footer";
 import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export const Wallpaper = () => {
@@ -129,71 +130,78 @@ export const Wallpaper = () => {
   }, [id]);
 
   return (
-    <div>
-      <NavBar />
-      <h1>Wallpaper</h1>
-      {wallpaper && (
-        <>
-          <img
-            className="wallpaper"
-            src={wallpaper[0].url}
-            alt={`Wallpaper ${wallpaper[0].id_imagen}`}
-          />
+    <>
+      <header>
+        <NavBar />
+      </header>
+      <main>
+        <h1>Wallpaper</h1>
+        {wallpaper && (
+          <>
+            <img
+              className="wallpaper"
+              src={wallpaper[0].url}
+              alt={`Wallpaper ${wallpaper[0].id_imagen}`}
+            />
 
-          {tags && (
-            <>
-              <ul className="tags-container">
-                {tags.map((tag) => (
-                  <li key={tag.id_etiqueta} className="tag">
-                    <p>{tag.nombre_etiqueta}</p>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
+            {tags && (
+              <>
+                <ul className="tags-container">
+                  {tags.map((tag) => (
+                    <li key={tag.id_etiqueta} className="tag">
+                      <p>{tag.nombre_etiqueta}</p>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
 
-          <p>Waifus en el Wallpaper</p>
-          {characters && (
-            <>
-              <ul className="tags-container">
-                {characters.map((character) => (
-                  <li key={character.id_personaje} className="tag">
-                    {/* <p>{lora.nombre_lora}</p> */}
-                    <p>{character.nombre}</p>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
+            <p>Waifus en el Wallpaper</p>
+            {characters && (
+              <>
+                <ul className="tags-container">
+                  {characters.map((character) => (
+                    <li key={character.id_personaje} className="tag">
+                      {/* <p>{lora.nombre_lora}</p> */}
+                      <p>{character.nombre}</p>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
 
-          <p>Modelos Loras</p>
-          {loras && (
-            <>
-              <ul className="tags-container">
-                {loras.map((lora) => (
-                  <li key={lora.id_modelo_lora} className="tag">
-                    {/* <p>{lora.nombre_lora}</p> */}
-                    {/* <p>{lora.id_modelo_lora}</p> */}
-                    <p>{lora.nombre_modelo_lora}</p>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
+            <p>Modelos Loras</p>
+            {loras && (
+              <>
+                <ul className="tags-container">
+                  {loras.map((lora) => (
+                    <li key={lora.id_modelo_lora} className="tag">
+                      {/* <p>{lora.nombre_lora}</p> */}
+                      {/* <p>{lora.id_modelo_lora}</p> */}
+                      <p>{lora.nombre_modelo_lora}</p>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
 
-          <div className="link-button">
-            <Link to={`/editar_wallpaper/${id}`}>Editar Wallpaper</Link>
-          </div>
-          <p></p>
-          <p>ID Imagen: {wallpaper[0].id_imagen}</p>
-          <p>Imagen Listada: {wallpaper[0].imagen_listada}</p>
-          <p>Fecha Actualización: {wallpaper[0].fecha_actualizacion}</p>
-          <p>Fecha Inserción: {wallpaper[0].fecha_insercion}</p>
-          <p>ID Modelo Base: {wallpaper[0].id_modelo_base}</p>
-          <p>Nombre Modelo Base: {wallpaper[0].nombre_modelo_base}</p>
-          <p>Semilla: {wallpaper[0].semilla}</p>
-        </>
-      )}
-    </div>
+            <div className="link-button">
+              <Link to={`/editar_wallpaper/${id}`}>Editar Wallpaper</Link>
+            </div>
+            <p></p>
+            <p>ID Imagen: {wallpaper[0].id_imagen}</p>
+            <p>Imagen Listada: {wallpaper[0].imagen_listada}</p>
+            <p>Fecha Actualización: {wallpaper[0].fecha_actualizacion}</p>
+            <p>Fecha Inserción: {wallpaper[0].fecha_insercion}</p>
+            <p>ID Modelo Base: {wallpaper[0].id_modelo_base}</p>
+            <p>Nombre Modelo Base: {wallpaper[0].nombre_modelo_base}</p>
+            <p>Semilla: {wallpaper[0].semilla}</p>
+          </>
+        )}
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+    </>
   );
 };

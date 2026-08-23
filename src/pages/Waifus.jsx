@@ -4,6 +4,7 @@ import "../styles/appstyles.css";
 import { show_characters } from "../config/Url_Config";
 import NavBar from "../routes/NavBar";
 import Swal from "sweetalert2";
+import { Footer } from "../routes/Footer";
 import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export default function Waifus() {
@@ -44,41 +45,47 @@ export default function Waifus() {
   }, []);
 
   return (
-    <div>
-      <NavBar />
+    <>
+      <header>
+        <NavBar />
+      </header>
+      <main>
+        <h1>Waifus</h1>
 
-      <h1>Waifus</h1>
+        <div className="link-button">
+          <Link to="/agregar_waifu">Agregar Waifu</Link>
+        </div>
 
-      <div className="link-button">
-        <Link to="/agregar_waifu">Agregar Waifu</Link>
-      </div>
-
-      <div className="waifus-container">
-        {waifus.map((waifu) => (
-          <div
-            className="waifus-card"
-            key={waifu.id}
-            style={{
-              border: "1px solid black",
-              margin: "10px",
-              padding: "10px",
-            }}
-          >
-            <Link
-              to={`/perfil_waifu/${waifu.id}`} /* state={{ waifuData: waifu }} */
+        <div className="waifus-container">
+          {waifus.map((waifu) => (
+            <div
+              className="waifus-card"
+              key={waifu.id}
+              style={{
+                border: "1px solid black",
+                margin: "10px",
+                padding: "10px",
+              }}
             >
-              <img
-                src={waifu.imagen}
-                alt={waifu.nombre}
-                style={{ width: 150, height: 250, objectFit: "cover" }}
-              />
-              <h2>
-                {waifu.nombre} ({waifu.alias})
-              </h2>
-            </Link>
-          </div>
-        ))}
-      </div>
-    </div>
+              <Link
+                to={`/perfil_waifu/${waifu.id}`} /* state={{ waifuData: waifu }} */
+              >
+                <img
+                  src={waifu.imagen}
+                  alt={waifu.nombre}
+                  style={{ width: 150, height: 250, objectFit: "cover" }}
+                />
+                <h2>
+                  {waifu.nombre} ({waifu.alias})
+                </h2>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+    </>
   );
 }

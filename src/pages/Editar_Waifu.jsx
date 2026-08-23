@@ -11,6 +11,7 @@ import {
 } from "../config/Url_Config";
 import { useFetch } from "../hooks/useFetch";
 import { useCheckAuth } from "../hooks/useCheckAuth";
+import { Footer } from "../routes/Footer";
 
 export const Editar_Waifu = () => {
   const [waifuOriginal, setWaifuOriginal] = React.useState(null);
@@ -210,229 +211,242 @@ export const Editar_Waifu = () => {
     JSON.stringify(waifuOriginal) !== JSON.stringify(waifuEditable);
 
   return (
-    <div>
-      <NavBar />
-      <h1>Editar Waifu {id}</h1>
+    <>
+      <header>
+        <NavBar />
+      </header>
+      <main>
+        <h1>Editar Waifu {id}</h1>
 
-      {!waifuOriginal ? (
-        <p>Cargando waifu...</p>
-      ) : (
-        <>
-          <div className="form-waifu-container">
-            <input
-              type="text"
-              value={waifuEditable.nombre}
-              onChange={(e) =>
-                setWaifuEditable({ ...waifuEditable, nombre: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              value={waifuEditable.alias}
-              onChange={(e) =>
-                setWaifuEditable({ ...waifuEditable, alias: e.target.value })
-              }
-            />
-            <img src={waifuEditable.imagen_perfil} style={{ width: 300 }} />
-            <input
-              type="text"
-              value={waifuEditable.descripcion}
-              onChange={(e) =>
-                setWaifuEditable({
-                  ...waifuEditable,
-                  descripcion: e.target.value,
-                })
-              }
-            />
+        {!waifuOriginal ? (
+          <p>Cargando waifu...</p>
+        ) : (
+          <>
+            <div className="form-waifu-container">
+              <input
+                type="text"
+                value={waifuEditable.nombre}
+                onChange={(e) =>
+                  setWaifuEditable({ ...waifuEditable, nombre: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                value={waifuEditable.alias}
+                onChange={(e) =>
+                  setWaifuEditable({ ...waifuEditable, alias: e.target.value })
+                }
+              />
+              <img src={waifuEditable.imagen_perfil} style={{ width: 300 }} />
+              <input
+                type="text"
+                value={waifuEditable.descripcion}
+                onChange={(e) =>
+                  setWaifuEditable({
+                    ...waifuEditable,
+                    descripcion: e.target.value,
+                  })
+                }
+              />
 
-            <input
-              type="text"
-              value={waifuEditable.historia}
-              onChange={(e) =>
-                setWaifuEditable({ ...waifuEditable, historia: e.target.value })
-              }
-            />
+              <input
+                type="text"
+                value={waifuEditable.historia}
+                onChange={(e) =>
+                  setWaifuEditable({
+                    ...waifuEditable,
+                    historia: e.target.value,
+                  })
+                }
+              />
 
-            <input
-              type="text"
-              value={waifuEditable.pasatiempo}
-              onChange={(e) =>
-                setWaifuEditable({
-                  ...waifuEditable,
-                  pasatiempo: e.target.value,
-                })
-              }
-            />
+              <input
+                type="text"
+                value={waifuEditable.pasatiempo}
+                onChange={(e) =>
+                  setWaifuEditable({
+                    ...waifuEditable,
+                    pasatiempo: e.target.value,
+                  })
+                }
+              />
 
-            <input
-              type="text"
-              value={waifuEditable.ocupacion}
-              onChange={(e) =>
-                setWaifuEditable({
-                  ...waifuEditable,
-                  ocupacion: e.target.value,
-                })
-              }
-            />
-            <input
-              type="number"
-              value={waifuEditable.dia}
-              onChange={(e) =>
-                setWaifuEditable({ ...waifuEditable, dia: e.target.value })
-              }
-            />
-            <input
-              type="number"
-              value={waifuEditable.mes}
-              onChange={(e) =>
-                setWaifuEditable({ ...waifuEditable, mes: e.target.value })
-              }
-            />
-            <input
-              type="number"
-              value={waifuEditable.edad}
-              onChange={(e) =>
-                setWaifuEditable({ ...waifuEditable, edad: e.target.value })
-              }
-            />
+              <input
+                type="text"
+                value={waifuEditable.ocupacion}
+                onChange={(e) =>
+                  setWaifuEditable({
+                    ...waifuEditable,
+                    ocupacion: e.target.value,
+                  })
+                }
+              />
+              <input
+                type="number"
+                value={waifuEditable.dia}
+                onChange={(e) =>
+                  setWaifuEditable({ ...waifuEditable, dia: e.target.value })
+                }
+              />
+              <input
+                type="number"
+                value={waifuEditable.mes}
+                onChange={(e) =>
+                  setWaifuEditable({ ...waifuEditable, mes: e.target.value })
+                }
+              />
+              <input
+                type="number"
+                value={waifuEditable.edad}
+                onChange={(e) =>
+                  setWaifuEditable({ ...waifuEditable, edad: e.target.value })
+                }
+              />
 
-            <p>Especie: {waifuEditable.especie}</p>
+              <p>Especie: {waifuEditable.especie}</p>
 
-            {listaEspecies.length > 0 ? (
-              <>
+              {listaEspecies.length > 0 ? (
+                <>
+                  <select
+                    name="especie"
+                    value={especieSeleccionada}
+                    onChange={(e) => setEspecieSeleccionada(e.target.value)}
+                  >
+                    <option value={""} disabled>
+                      Selecciona una especie
+                    </option>
+                    {especiesDisponibles.map((especie) => (
+                      <option
+                        key={especie.id_especie}
+                        value={especie.id_especie}
+                      >
+                        {especie.nombre}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={Cambiar_Especie}
+                    disabled={especieSeleccionada == ""}
+                  >
+                    Cambiar Especie
+                  </button>
+                </>
+              ) : (
+                <p>No hay lista de especies Bv</p>
+              )}
+              <p>Personalidades:</p>
+              <div>
+                {personalidadesEditables.length > 0 ? (
+                  <div
+                    style={{
+                      background: "purple",
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "10px",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    {personalidadesEditables.map((personalidad) => (
+                      <div
+                        key={personalidad.id_personalidad}
+                        style={{
+                          background: "blue",
+                          display: "flex",
+                          flexDirection: "row",
+                          width: "150px",
+                          gap: "10px",
+                        }}
+                      >
+                        <p>{personalidad.nombre_personalidad}</p>
+                        <button
+                          onClick={() =>
+                            Eliminar_Personalidad(personalidad.id_personalidad)
+                          }
+                        >
+                          X
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>No hay personalidades de la Waifu Bv</p>
+                )}
+              </div>
+
+              {listaPersonalidades.length > 0 ? (
                 <select
-                  name="especie"
-                  value={especieSeleccionada}
-                  onChange={(e) => setEspecieSeleccionada(e.target.value)}
+                  name="personalidad"
+                  value={personalidadSeleccionada}
+                  onChange={(e) => setPersonalidadSeleccionada(e.target.value)}
                 >
                   <option value={""} disabled>
-                    Selecciona una especie
+                    Selecciona una personalidad
                   </option>
-                  {especiesDisponibles.map((especie) => (
-                    <option key={especie.id_especie} value={especie.id_especie}>
-                      {especie.nombre}
+                  {personalidadesDisponibles.map((personalidad) => (
+                    <option
+                      key={personalidad.id_personalidad}
+                      value={personalidad.id_personalidad}
+                    >
+                      {personalidad.nombre}
                     </option>
                   ))}
                 </select>
-                <button
-                  onClick={Cambiar_Especie}
-                  disabled={especieSeleccionada == ""}
-                >
-                  Cambiar Especie
-                </button>
-              </>
-            ) : (
-              <p>No hay lista de especies Bv</p>
-            )}
-            <p>Personalidades:</p>
-            <div>
-              {personalidadesEditables.length > 0 ? (
-                <div
-                  style={{
-                    background: "purple",
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: "10px",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {personalidadesEditables.map((personalidad) => (
-                    <div
-                      key={personalidad.id_personalidad}
-                      style={{
-                        background: "blue",
-                        display: "flex",
-                        flexDirection: "row",
-                        width: "150px",
-                        gap: "10px",
-                      }}
-                    >
-                      <p>{personalidad.nombre_personalidad}</p>
-                      <button
-                        onClick={() =>
-                          Eliminar_Personalidad(personalidad.id_personalidad)
-                        }
-                      >
-                        X
-                      </button>
-                    </div>
-                  ))}
-                </div>
               ) : (
-                <p>No hay personalidades de la Waifu Bv</p>
+                <p>No hay lista de especies Bv</p>
               )}
             </div>
+            <p></p>
+            <button
+              disabled={personalidadSeleccionada == ""}
+              onClick={Agregar_Personalidad}
+            >
+              Agregar Personalidad
+            </button>
 
-            {listaPersonalidades.length > 0 ? (
-              <select
-                name="personalidad"
-                value={personalidadSeleccionada}
-                onChange={(e) => setPersonalidadSeleccionada(e.target.value)}
-              >
-                <option value={""} disabled>
-                  Selecciona una personalidad
-                </option>
-                {personalidadesDisponibles.map((personalidad) => (
-                  <option
-                    key={personalidad.id_personalidad}
-                    value={personalidad.id_personalidad}
-                  >
-                    {personalidad.nombre}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <p>No hay lista de especies Bv</p>
+            <p>Imagen: {waifuEditable.imagen}</p>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                setImage(file);
+
+                /* setEditWaifu({...editWaifu, imagen: file} ) */
+
+                if (file) setPreview(URL.createObjectURL(file));
+              }}
+            />
+
+            <p></p>
+
+            {preview && (
+              <>
+                <img
+                  src={preview}
+                  alt="Preview"
+                  style={{ width: 100, height: 100, objectFit: "cover" }}
+                />
+                <p> preview - {preview} </p>
+                <p> image - {image?.type} </p>
+                <p> EditWaifu - {waifuEditable.imagen} </p>
+
+                <button onClick={() => Subir_Imagen()}>Subir imagen</button>
+              </>
             )}
-          </div>
-          <p></p>
-          <button
-            disabled={personalidadSeleccionada == ""}
-            onClick={Agregar_Personalidad}
-          >
-            Agregar Personalidad
-          </button>
 
-          <p>Imagen: {waifuEditable.imagen}</p>
+            <p></p>
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              setImage(file);
-
-              /* setEditWaifu({...editWaifu, imagen: file} ) */
-
-              if (file) setPreview(URL.createObjectURL(file));
-            }}
-          />
-
-          <p></p>
-
-          {preview && (
-            <>
-              <img
-                src={preview}
-                alt="Preview"
-                style={{ width: 100, height: 100, objectFit: "cover" }}
-              />
-              <p> preview - {preview} </p>
-              <p> image - {image?.type} </p>
-              <p> EditWaifu - {waifuEditable.imagen} </p>
-
-              <button onClick={() => Subir_Imagen()}>Subir imagen</button>
-            </>
-          )}
-
-          <p></p>
-
-          {/* <button disabled={!isModified} onClick={Probar_Datos}> */}
-          <button disabled={!isModified} onClick={Actualizar_Perfil}>
-            Actualizar Perfil
-          </button>
-        </>
-      )}
-    </div>
+            {/* <button disabled={!isModified} onClick={Probar_Datos}> */}
+            <button disabled={!isModified} onClick={Actualizar_Perfil}>
+              Actualizar Perfil
+            </button>
+          </>
+        )}
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+    </>
   );
 };

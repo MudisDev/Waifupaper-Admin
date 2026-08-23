@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { logout_user } from "../config/Url_Config";
 import { useCheckAuth } from "../hooks/useCheckAuth";
+import { Footer } from "../routes/Footer";
 
 export const Configuracion = () => {
   const navigate = useNavigate();
@@ -34,18 +35,25 @@ export const Configuracion = () => {
   };
 
   return (
-    <div>
-      <NavBar />
-      <h1>Configuración</h1>
+    <>
+      <header>
+        <NavBar />
+      </header>
+      <main>
+        <h1>Configuración</h1>
 
-      <div className="link-button">
-        <Link to="">Cambiar Tema</Link>
-      </div>
-      <p></p>
-      <div className="link-button">
-        {/* <Link to="/">Cerrar Sesion</Link> */}
-        <button onClick={handleLogout}>Cerrar Sesion</button>
-      </div>
-    </div>
+        <div className="link-button">
+          <Link to="">Cambiar Tema</Link>
+        </div>
+        <p></p>
+        <div className="link-button">
+          {/* <Link to="/">Cerrar Sesion</Link> */}
+          <button onClick={handleLogout}>Cerrar Sesion</button>
+        </div>
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+    </>
   );
 };

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { show_images } from "../config/Url_Config";
 import { Link } from "react-router-dom";
 import { useCheckAuth } from "../hooks/useCheckAuth";
+import { Footer } from "../routes/Footer";
 
 export const Galeria = () => {
   const [imagenes, setImagenes] = React.useState([]);
@@ -44,21 +45,28 @@ export const Galeria = () => {
   }, []);
 
   return (
-    <div>
-      <NavBar />
-      <h1>Galeria</h1>
+    <>
+      <header>
+        <NavBar />
+      </header>
+      <main>
+        <h1>Galeria</h1>
 
-      {imagenes && imagenes.length > 0 && (
-        <div className="galeria-container">
-          {imagenes.map((img) => (
-            <div className="galeria-card" key={img.id_imagen}>
-              <Link to={`/wallpaper/${img.id_imagen}`}>
-                <img src={img.url} alt={`Imagen ${img.id_imagen}`} />
-              </Link>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+        {imagenes && imagenes.length > 0 && (
+          <div className="galeria-container">
+            {imagenes.map((img) => (
+              <div className="galeria-card" key={img.id_imagen}>
+                <Link to={`/wallpaper/${img.id_imagen}`}>
+                  <img src={img.url} alt={`Imagen ${img.id_imagen}`} />
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+    </>
   );
 };

@@ -5,6 +5,7 @@ import {
   search_character,
   show_images_for_character,
 } from "../config/Url_Config";
+import { Footer } from "../routes/Footer";
 import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export const Perfil_Waifu = () => {
@@ -86,56 +87,63 @@ export const Perfil_Waifu = () => {
   }, [id]);
 
   return (
-    <div>
-      <NavBar />
-      {waifuData && (
-        <>
-          <h1>
-            {waifuData.nombre} ({waifuData.alias})
-          </h1>
-          {/* <p>{waifuData.descripcion}</p> */}
-          <img src={waifuData.imagen} alt={waifuData.nombre} />
-          <p>Descripción: {waifuData.descripcion}</p>
-          <p>Historia: {waifuData.historia}</p>
-          <p>Pasatiempo: {waifuData.pasatiempo}</p>
-          <p>Ocupación: {waifuData.ocupacion}</p>
-          <p>
-            Cumpleaños: {waifuData.dia} de {waifuData.mes}
-          </p>
-          <p>Edad: {waifuData.edad}</p>
-          <p>Especie: {waifuData.especie}</p>
-          <p>Personalidades: {waifuData.personalidades}</p>
-          <p></p>
+    <>
+      <header>
+        <NavBar />
+      </header>
+      <main>
+        {waifuData && (
+          <>
+            <h1>
+              {waifuData.nombre} ({waifuData.alias})
+            </h1>
+            {/* <p>{waifuData.descripcion}</p> */}
+            <img src={waifuData.imagen} alt={waifuData.nombre} />
+            <p>Descripción: {waifuData.descripcion}</p>
+            <p>Historia: {waifuData.historia}</p>
+            <p>Pasatiempo: {waifuData.pasatiempo}</p>
+            <p>Ocupación: {waifuData.ocupacion}</p>
+            <p>
+              Cumpleaños: {waifuData.dia} de {waifuData.mes}
+            </p>
+            <p>Edad: {waifuData.edad}</p>
+            <p>Especie: {waifuData.especie}</p>
+            <p>Personalidades: {waifuData.personalidades}</p>
+            <p></p>
 
-          <div className="link-button">
-            <Link to={`/editar_waifu/${id}`}>Editar Perfil</Link>
-          </div>
-          <p></p>
-          <div className="link-button">
-            <Link to={`/agregar_wallpapers/${id}`}>Agregar Wallpaper</Link>
-          </div>
-
-          <p></p>
-
-          <h2>Wallpapers</h2>
-          {wallpapers && wallpapers.length > 0 ? (
-            <div className="galeria-container">
-              {wallpapers.map((wp) => (
-                <div className="galeria-card" key={wp.id_imagen}>
-                  <Link to={`/wallpaper/${wp.id_imagen}`}>
-                    <img
-                      src={wp.url}
-                      alt={`Wallpaper de ${waifuData.nombre}`}
-                    />
-                  </Link>
-                </div>
-              ))}
+            <div className="link-button">
+              <Link to={`/editar_waifu/${id}`}>Editar Perfil</Link>
             </div>
-          ) : (
-            <p>No hay wallpapers disponibles.</p>
-          )}
-        </>
-      )}
-    </div>
+            <p></p>
+            <div className="link-button">
+              <Link to={`/agregar_wallpapers/${id}`}>Agregar Wallpaper</Link>
+            </div>
+
+            <p></p>
+
+            <h2>Wallpapers</h2>
+            {wallpapers && wallpapers.length > 0 ? (
+              <div className="galeria-container">
+                {wallpapers.map((wp) => (
+                  <div className="galeria-card" key={wp.id_imagen}>
+                    <Link to={`/wallpaper/${wp.id_imagen}`}>
+                      <img
+                        src={wp.url}
+                        alt={`Wallpaper de ${waifuData.nombre}`}
+                      />
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No hay wallpapers disponibles.</p>
+            )}
+          </>
+        )}
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+    </>
   );
 };
