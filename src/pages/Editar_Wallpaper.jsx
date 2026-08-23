@@ -81,17 +81,17 @@ export const Editar_Wallpaper = () => {
   const [preview, setPreview] = React.useState(null);
 
   const { data: listaModelosLora, fetchData: consultarModelosLora } = useFetch({
-    endpoint: show_lora_models,
+    endpoint: show_lora_models, metodo: "GET",
   });
   const { data: listaModelosBase, fetchData: consultarModelosBase } = useFetch({
-    endpoint: show_base_models,
+    endpoint: show_base_models,  metodo: "GET",
   });
   const { data: listaEtiquetas, fetchData: consultarEtiquetas } = useFetch({
-    endpoint: show_tags,
+    endpoint: show_tags, metodo: "GET",
   });
 
   const { data: listaWaifus, fetchData: consultarWaifus } = useFetch({
-    endpoint: show_characters,
+    endpoint: show_characters, metodo: "GET",
   });
 
   const {
@@ -99,12 +99,14 @@ export const Editar_Wallpaper = () => {
     fetchData: consultarModelosLoraWallpaper,
   } = useFetch({
     endpoint: show_lora_models_for_image,
+    metodo: "GET",
     params: { id_imagen: id_wallpaper },
   });
 
   const { data: listaWaifusWallpaper, fetchData: consultarWaifusWallpaper } =
     useFetch({
       endpoint: show_characters_for_image,
+      metodo: "GET",
       params: { id_imagen: id_wallpaper },
     });
 
@@ -113,11 +115,13 @@ export const Editar_Wallpaper = () => {
     fetchData: consultarEtiquetasWallpaper,
   } = useFetch({
     endpoint: consult_tags,
+    metodo: "GET",
     params: { id_imagen: id_wallpaper },
   });
 
   const { data: wallpaperBv, fetchData: buscarWallpaper } = useFetch({
     endpoint: search_image,
+    metodo: "GET",
     params: { id_imagen: id_wallpaper },
     primerElemento: true,
   });

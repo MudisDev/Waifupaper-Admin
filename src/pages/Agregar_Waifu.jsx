@@ -41,13 +41,14 @@ export const Agregar_Waifu = () => {
   });
 
   const { data: listaEspecies, fetchData: consultarEspecies } = useFetch({
-    endpoint: show_kinds,
+    endpoint: show_kinds, metodo: "GET"
   });
   const { data: listaPersonalidades, fetchData: consultarPersonalidades } =
-    useFetch({ endpoint: show_personalities });
+    useFetch({ endpoint: show_personalities , metodo: "GET"});
 
   const { data: registroData, fetchData: registrarWaifu } = useFetch({
     endpoint: add_character,
+    metodo: "POST",
     primerElemento: true,
   });
 

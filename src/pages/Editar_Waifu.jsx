@@ -30,24 +30,28 @@ export const Editar_Waifu = () => {
 
   const { id } = useParams();
   const { data: listaPersonalidades, fetchData: consultarPersonalidades } =
-    useFetch({ endpoint: show_personalities });
+    useFetch({ endpoint: show_personalities, metodo: "GET" });
   const {
     data: personalidadesOriginales,
     fetchData: consultarPersonalidadesWaifu,
   } = useFetch({
     endpoint: show_personalities_for_character,
+    metodo: "GET",
     params: { id_personaje: id },
   });
   const { data: waifuData, fetchData: consultarWaifu } = useFetch({
     endpoint: search_character,
+    metodo: "GET",
     params: { id_personaje: id },
     primerElemento: true,
   });
   const { data: listaEspecies, fetchData: consultarEspecies } = useFetch({
     endpoint: show_kinds,
+    metodo: "GET",
   });
   const { data: waifuActualizada, fetchData: actualizarWaifu } = useFetch({
     endpoint: edit_character,
+    metodo: "POST",
   });
 
   const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
