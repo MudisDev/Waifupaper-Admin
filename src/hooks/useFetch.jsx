@@ -1,7 +1,7 @@
 import React from "react";
 
 export const useFetch = ({ endpoint, metodo, params = {} }) => {
-  const [data, setData] = React.useState(null);
+  const [data, setData] = React.useState([]);
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
 
@@ -38,7 +38,23 @@ export const useFetch = ({ endpoint, metodo, params = {} }) => {
 
       const response = await fetch(url, opciones);
 
-      const json = await response.json();
+      /*  const json = await response.json(); */
+
+      // 👇 Primero obtenemos la respuesta como texto
+      const texto = await response.text();
+
+      console.log("Respuesta RAW del servidor:", texto);
+
+      // 👇 Intentamos convertir ese texto a JSON
+      let json;
+
+      try {
+        json = JSON.parse(texto);
+      } catch (e) {
+        throw new Error(
+          `El servidor no devolvió JSON válido: ${texto}, ERROR CACHADO -> ${e}`,
+        );
+      }
 
       if (!response.ok) {
         setError({

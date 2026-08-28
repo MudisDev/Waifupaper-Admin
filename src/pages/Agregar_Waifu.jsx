@@ -1,16 +1,17 @@
-import React from "react";
+import React, { useEffectEvent } from "react";
 import { Link } from "react-router-dom";
 import NavBar from "../routes/NavBar";
 import { useEffect } from "react";
 import {
   show_kinds,
   show_personalities,
-  image_server,
+  /* image_server, */
   add_character,
 } from "../config/Url_Config";
 import { useFetch } from "../hooks/useFetch";
 import { useCheckAuth } from "../hooks/useCheckAuth";
 import { Footer } from "../routes/Footer";
+import { useUploadImage } from "../hooks/useUploadImage";
 
 export const Agregar_Waifu = () => {
   const [image, setImage] = React.useState(null);
@@ -41,15 +42,23 @@ export const Agregar_Waifu = () => {
   });
 
   const { data: listaEspecies, fetchData: consultarEspecies } = useFetch({
-    endpoint: show_kinds, metodo: "GET"
+    endpoint: show_kinds,
+    metodo: "GET",
   });
   const { data: listaPersonalidades, fetchData: consultarPersonalidades } =
-    useFetch({ endpoint: show_personalities , metodo: "GET"});
+    useFetch({ endpoint: show_personalities, metodo: "GET" });
 
-  const { data: registroData, fetchData: registrarWaifu } = useFetch({
+  const {
+    data: registroData,
+    fetchData: registrarWaifu,
+    loading: registroLoading,
+    error: registroError,
+  } = useFetch({
     endpoint: add_character,
     metodo: "POST",
   });
+
+  const { subirImagen } = useUploadImage();
 
   useEffect(() => {
     consultarEspecies();
@@ -61,7 +70,7 @@ export const Agregar_Waifu = () => {
       (waifu) => waifu.id_personalidad,
     );
 
-    const params = new URLSearchParams({
+    const params = {
       nombre: waifuEditable?.nombre,
       alias: waifuEditable?.alias,
       descripcion: waifuEditable?.descripcion,
@@ -74,14 +83,28 @@ export const Agregar_Waifu = () => {
       id_especie: especieSeleccionada,
       imagen_perfil: imageUrl,
       ids_personalidades: personalidades,
-    });
-
+    };
+    console.log("Datos a subir -> ", params);
     registrarWaifu(params);
-    console.log("Status Registro Waifu -> ", registroData);
   };
 
-  const Registrar_Waifu = () => {
-    if (image) Subir_Imagen();
+  useEffect(() => {
+    console.log("Status Registro Waifu -> ", registroData);
+  }, [registroData]);
+
+  useEffect(() => {
+    console.log("ERROR Registro Waifu -> ", registroError);
+  }, [registroError]);
+
+  useEffect(() => {
+    console.log("LOADING Registro Waifu -> ", registroLoading);
+  }, [registroLoading]);
+
+  const Registrar_Waifu = async () => {
+    let urlImagen = null;
+    const waifu = 0;
+    if (image) urlImagen = await subirImagen({ waifu, image });
+    if (urlImagen) await Registrar_Personaje(urlImagen);
   };
 
   const Probar_Datos = () => {
@@ -107,13 +130,13 @@ export const Agregar_Waifu = () => {
     console.log("Datos a subir -> ", variables);
   };
 
-  const Subir_Imagen = async () => {
+  /* const Subir_Imagen = async () => {
     const formData = new FormData();
-    /* formData.append('username', username);
+    formData.append('username', username);
         formData.append('password', password);
         formData.append('name', name);
         formData.append('phone', phoneNumber);
-        formData.append('email', email); */
+        formData.append('email', email); 
 
     formData.append("id_personaje", 0);
 
@@ -134,7 +157,7 @@ export const Agregar_Waifu = () => {
         console.log("IMAGEN SUBIDA => ", data);
 
         Registrar_Personaje(data.url);
-        /* const booleanPublicImage = Boolean(publicImage); */
+         //const booleanPublicImage = Boolean(publicImage); 
       } else if (data.Error) {
         console.warn("error", data);
         //ShowAlert({ title: 'Error', text: 'Ocurrió un error durante el registro.', buttonOk: 'Ok', onConfirm: () => void {} });
@@ -142,7 +165,7 @@ export const Agregar_Waifu = () => {
     } catch (e) {
       console.log(`Error al subir imagen al servidor => ${e}`);
     }
-  };
+  }; */
 
   const activateButton =
     image &&
@@ -155,7 +178,7 @@ export const Agregar_Waifu = () => {
     waifuEditable?.dia != "" &&
     waifuEditable?.mes != "" &&
     waifuEditable?.edad != "" &&
-    personalidadesEditables.length == 0 &&
+    personalidadesEditables.length > 0 &&
     especieSeleccionada != ""
       ? true
       : false;
@@ -368,7 +391,7 @@ export const Agregar_Waifu = () => {
           )}
 
           {/* <button disabled={activateButton} onClick={() => Subir_Imagen()}> */}
-          <button disabled={activateButton} onClick={Registrar_Waifu}>
+          <button disabled={!activateButton} onClick={Registrar_Waifu}>
             Agregar Waifu
           </button>
         </div>
