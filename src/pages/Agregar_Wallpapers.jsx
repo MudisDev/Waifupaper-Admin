@@ -8,6 +8,7 @@ import {
   show_characters,
   show_tags,
   edit_wallpaper,
+  add_wallpaper,
 } from "../config/Url_Config";
 import { useArrayHelpers } from "../hooks/useArrayHelpers";
 import { useLoraEditor } from "../hooks/useLoraEditor";
@@ -61,18 +62,24 @@ export const Agregar_Wallpapers = () => {
 
   const { data: listaModelosBase, fetchData: consultarModelosBase } = useFetch({
     endpoint: show_base_models,
+    metodo: "GET",
   });
   const { data: listaModelosLora, fetchData: consultarModelosLora } = useFetch({
     endpoint: show_lora_models,
+    metodo: "GET",
   });
 
   const { data: listaEtiquetas, fetchData: consultarEtiquetas } = useFetch({
     endpoint: show_tags,
+    metodo: "GET",
   });
 
   const { data: listaWaifus, fetchData: consultarWaifus } = useFetch({
     endpoint: show_characters,
+    metodo: "GET",
   });
+
+  const {data: statusSubirServidor, fetchData: subirServidor, loading, error} = useFetch({endpoint: add_wallpaper, metodo: "POST"});
 
   const { agregarElementoObjetoArray, eliminarElementoObjetoArray } =
     useArrayHelpers();
@@ -243,7 +250,7 @@ export const Agregar_Wallpapers = () => {
       .map((lora) => lora.prompt_positivo)
       .join("|");
 
-    const variables = new URLSearchParams({
+    const variables = {
       semilla: wallpaper.semilla,
       imagen_listada: wallpaper.imagen_listada,
       id_modelo_base: wallpaper.id_modelo_base,
@@ -260,28 +267,11 @@ export const Agregar_Wallpapers = () => {
       fuerza_modelos_lora: fuerzaLoras,
       prompts_positivos_modelos_lora: promptsPositivos,
       prompts_negativos_modelos_lora: promptsNegativos,
-    });
+    };
     console.log(variables);
 
-    try {
-      const response = await fetch(`${edit_wallpaper}?${variables.toString()}`);
-      const data = await response.json();
-      //const texto = await response.text();
+    await subirServidor(variables);
 
-      //console.log("RESPUESTA actualizacion -> ", texto);
-
-      console.log("Estado de actualizacion -> ", data);
-
-      //SOLO REGRESA TRUE
-      //POR LO QUE AQUI MARCA QUE NO SE ACTUALIZO PERO SI LO HACE BV
-      if (data.Success) console.log("Actualizacion de wallpaper exitosa");
-      else console.log("No se pudo actualizar el wallpaper");
-    } catch (error) {
-      console.error(
-        "Error al intentar actualizar el wallpaper, error -> ",
-        error,
-      );
-    }
   };
 
   return (

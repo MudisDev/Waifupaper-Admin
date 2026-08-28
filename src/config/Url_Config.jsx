@@ -37,6 +37,7 @@ export const consult_tags = `${image_path}/consultar_etiquetas.php`;
 export const edit_image = `${image_path}/editar_imagen.php`;
 //export const show_characters_for_image = `${image_path}/mostrar_personajes.php`;
 
+export const add_wallpaper = `${transaction_path}/agregar_wallpaper.php`;
 export const edit_wallpaper = `${transaction_path}/editar_wallpaper.php`;
 export const add_character = `${transaction_path}/agregar_personaje.php`;
 export const edit_character = `${transaction_path}/editar_personaje.php`;
