@@ -123,7 +123,6 @@ export const Editar_Wallpaper = () => {
     endpoint: search_image,
     metodo: "GET",
     params: { id_imagen: id_wallpaper },
-    primerElemento: true,
   });
 
   const { agregarElementoObjetoArray, eliminarElementoObjetoArray } =

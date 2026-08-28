@@ -49,7 +49,6 @@ export const Agregar_Waifu = () => {
   const { data: registroData, fetchData: registrarWaifu } = useFetch({
     endpoint: add_character,
     metodo: "POST",
-    primerElemento: true,
   });
 
   useEffect(() => {

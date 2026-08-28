@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { login_user } from "../config/Url_Config";
 import { Footer } from "../routes/Footer";
+import { useFetch } from "../hooks/useFetch";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -9,37 +10,34 @@ export default function Login() {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const {
+    data: loginInfo,
+    fetchData: Login,
+    error: loginError,
+  } = useFetch({
+    endpoint: login_user,
+    metodo: "POST",
+  });
+
   const handleLogin = async () => {
-    try {
-      const response = await fetch(
-        `${login_user}?username=${username}&password=${password}&waifupaperControlPanel=true`,
-        { credentials: "include" },
-      );
-
-      const data = await response.json();
-      console.log("Respuesta login:", data);
-
-      /*       const texto = await response.text();
-      console.log("Respuesta de login -> ", texto); */
-
-      if (!data.Error) {
-        console.log(`usuario => ${data.username} - ${data.nombre}`);
-        navigate("/home"); // 👈 redirigir
-      } else {
-        console.log("Login failed: Invalid credentials");
-        alert("Error, crendenciales inválidas.");
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
+    const datos = {
+      username: username,
+      password: password,
+      waifupaperControlPanel: true,
+    };
+    await Login(datos);
   };
+
+  useEffect(() => {
+    if (!loginInfo || Array.isArray(loginInfo)) return;
+    if (loginInfo.Success) navigate("/home");
+    if (loginInfo.Error) alert("Error, credenciales inválidas.");
+  }, [loginInfo, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     handleLogin();
   };
-
-  const disabledButton = username != "" && password != "" ? true : false;
 
   return (
     <>
@@ -69,7 +67,7 @@ export default function Login() {
             />
           </label>
           <p></p>
-          <button type="submit" disabled={!disabledButton}>
+          <button type="submit" disabled={username == "" || password == ""}>
             Submit
           </button>
         </form>

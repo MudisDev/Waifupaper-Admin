@@ -43,7 +43,6 @@ export const Editar_Waifu = () => {
     endpoint: search_character,
     metodo: "GET",
     params: { id_personaje: id },
-    primerElemento: true,
   });
   const { data: listaEspecies, fetchData: consultarEspecies } = useFetch({
     endpoint: show_kinds,

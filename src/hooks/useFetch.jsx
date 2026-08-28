@@ -1,12 +1,7 @@
 import React from "react";
 
-export const useFetch = ({
-  endpoint,
-  metodo,
-  params = {},
-  primerElemento = false,
-}) => {
-  const [data, setData] = React.useState(primerElemento ? null : []);
+export const useFetch = ({ endpoint, metodo, params = {} }) => {
+  const [data, setData] = React.useState(null);
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
 
@@ -53,7 +48,7 @@ export const useFetch = ({
         return;
       }
 
-      setData(primerElemento ? json[0] : json);
+      setData(json);
     } catch (e) {
       setError(e);
     } finally {
