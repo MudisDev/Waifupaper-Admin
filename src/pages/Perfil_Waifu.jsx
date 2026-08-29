@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
-import NavBar from "../routes/NavBar";
+import React, { useEffect, useState } from "react";
+/* import NavBar from "../routes/NavBar"; */
+NavBar;
 import { Link, useParams } from "react-router-dom";
 import {
   search_character,
@@ -7,6 +8,8 @@ import {
 } from "../config/Url_Config";
 import { Footer } from "../routes/Footer";
 import { useCheckAuth } from "../hooks/useCheckAuth";
+import NavBar from "../routes/NavBar";
+import { useFetch } from "../hooks/useFetch";
 
 export const Perfil_Waifu = () => {
   const [waifuData, setWaifuData] = React.useState();
@@ -19,72 +22,32 @@ export const Perfil_Waifu = () => {
     VerificarAutorizacion();
   }, []);
 
-  useEffect(() => {
-    const Buscar_Wallpapers = async () => {
-      try {
-        const response = await fetch(
-          `${show_images_for_character}?id_personaje=${id}`,
-        );
+  const { data: dataWaifu, fetchData: consultarWaifu } = useFetch({
+    endpoint: search_character,
+    metodo: "GET",
+    params: { id_personaje: id },
+  });
 
-        const data = await response.json();
-        console.log("Wallpapers data =>", data);
-
-        if (Array.isArray(data) && data.length > 0) {
-          const wallpapersData = data.map((img) => ({
-            id_imagen: img.id_imagen,
-            imagen_listada: img.imagen_listada,
-            url: img.url,
-            fecha_actualizacion: img.fecha_actualizacion,
-            fecha_insercion: img.fecha_insercion,
-            id_modelo_base: img.id_modelo_base,
-            semilla: img.semilla,
-          }));
-
-          setWallpapers(wallpapersData);
-        }
-      } catch (error) {
-        console.error("Error fetching wallpapers =>", error);
-      }
-    };
-    Buscar_Wallpapers();
-  }, [id]);
+  const { data: dataWallpapers, fetchData: consultarWallpapers } = useFetch({
+    endpoint: show_images_for_character,
+    metodo: "GET",
+    params: { id_personaje: id },
+  });
 
   useEffect(() => {
-    const buscar_personaje = async () => {
-      try {
-        const response = await fetch(`${search_character}?id_personaje=${id}`);
+    consultarWallpapers();
+    consultarWaifu();
+  }, []);
 
-        const data = await response.json();
-        const waifu = data[0];
-        if (data) {
-          const waifuData = {
-            id: waifu.id_personaje,
-            nombre: waifu.nombre,
-            imagen: waifu.imagen_perfil,
-            id_personaje: "5",
-            alias: waifu.alias,
-            descripcion: waifu.descripcion,
-            historia: waifu.historia,
-            pasatiempo: waifu.pasatiempo,
-            ocupacion: waifu.ocupacion,
-            dia: waifu.dia,
-            mes: waifu.mes,
-            edad: waifu.edad,
-            especie: waifu.especie,
-            personalidades: waifu.personalidades,
-          };
+  useEffect(() => {
+    if (!dataWaifu) return;
+    setWaifuData(dataWaifu);
+  }, [dataWaifu]);
 
-          setWaifuData(waifuData);
-        }
-
-        console.log("Waifu data =>", data);
-      } catch (error) {
-        console.error("Error fetching waifu data =>", error);
-      }
-    };
-
-    buscar_personaje();
-  }, [id]);
+  useEffect(() => {
+    if (!dataWallpapers) return;
+    setWallpapers(dataWallpapers);
+  }, [dataWallpapers]);
 
   return (
     <>
@@ -98,7 +61,7 @@ export const Perfil_Waifu = () => {
               {waifuData.nombre} ({waifuData.alias})
             </h1>
             {/* <p>{waifuData.descripcion}</p> */}
-            <img src={waifuData.imagen} alt={waifuData.nombre} />
+            <img src={waifuData.imagen_perfil} alt={waifuData.nombre} />
             <p>Descripción: {waifuData.descripcion}</p>
             <p>Historia: {waifuData.historia}</p>
             <p>Pasatiempo: {waifuData.pasatiempo}</p>

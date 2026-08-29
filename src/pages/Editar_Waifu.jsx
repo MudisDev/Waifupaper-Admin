@@ -12,6 +12,7 @@ import {
 import { useFetch } from "../hooks/useFetch";
 import { useCheckAuth } from "../hooks/useCheckAuth";
 import { Footer } from "../routes/Footer";
+import { useUploadImage } from "../hooks/useUploadImage";
 
 export const Editar_Waifu = () => {
   const [waifuOriginal, setWaifuOriginal] = React.useState(null);
@@ -55,6 +56,8 @@ export const Editar_Waifu = () => {
 
   const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
 
+  const { subirImagen } = useUploadImage();
+
   useEffect(() => {
     VerificarAutorizacion();
   }, []);
@@ -71,6 +74,8 @@ export const Editar_Waifu = () => {
     setPersonalidadesEditables(personalidadesOriginales);
   }, [personalidadesOriginales]);
 
+  console.log("WAIFU EDITABLE -> ", waifuEditable);
+
   useEffect(() => {
     if (!waifuData) return;
     setWaifuOriginal(waifuData);
@@ -78,14 +83,25 @@ export const Editar_Waifu = () => {
   }, [waifuData]);
 
   const Subir_Imagen = async () => {
-    const formData = new FormData();
+    /* const formData = new FormData();
 
     formData.append("id_personaje", 0);
 
     if (image) {
       formData.append("imagen_perfil", image); // 👈 AQUÍ ESTÁ LA MAGIA
-    }
+    } */
 
+    let waifu = 0;
+    let urlNueva = null;
+    if (image) urlNueva = await subirImagen({ waifu, image });
+
+    if (urlNueva) {
+      setWaifuEditable((prev) => ({
+        ...prev,
+        imagen_perfil: urlNueva,
+      }));
+    }
+    /* 
     try {
       const response = await fetch(`${image_server}`, {
         //const response = await fetch(`${upload_image_to_server}`, {
@@ -109,21 +125,21 @@ export const Editar_Waifu = () => {
         //Actualizar_Perfil();
 
         //Registrar_Personaje(data.url);
-        /* const booleanPublicImage = Boolean(publicImage); */
+        //const booleanPublicImage = Boolean(publicImage);
       } else if (data.Error) {
         console.warn("error", data);
         //ShowAlert({ title: 'Error', text: 'Ocurrió un error durante el registro.', buttonOk: 'Ok', onConfirm: () => void {} });
       }
     } catch (e) {
       console.log(`Error al subir imagen al servidor => ${e}`);
-    }
+    } */
   };
 
   const Actualizar_Perfil = async () => {
-    const personalidades = personalidadesEditables
-      .map((pw) => pw.id_personalidad)
-      .join(",");
-    const params = new URLSearchParams({
+    const personalidades = personalidadesEditables.map(
+      (pw) => pw.id_personalidad,
+    );
+    const params = {
       id_personaje: String(waifuEditable?.id_personaje),
       nombre: waifuEditable?.nombre,
       alias: waifuEditable?.alias,
@@ -137,7 +153,7 @@ export const Editar_Waifu = () => {
       id_especie: waifuEditable?.id_especie,
       imagen_perfil: waifuEditable.imagen_perfil,
       ids_personalidades: personalidades,
-    });
+    };
 
     actualizarWaifu(params);
   };
