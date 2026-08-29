@@ -81,17 +81,21 @@ export const Editar_Wallpaper = () => {
   const [preview, setPreview] = React.useState(null);
 
   const { data: listaModelosLora, fetchData: consultarModelosLora } = useFetch({
-    endpoint: show_lora_models, metodo: "GET",
+    endpoint: show_lora_models,
+    metodo: "GET",
   });
   const { data: listaModelosBase, fetchData: consultarModelosBase } = useFetch({
-    endpoint: show_base_models,  metodo: "GET",
+    endpoint: show_base_models,
+    metodo: "GET",
   });
   const { data: listaEtiquetas, fetchData: consultarEtiquetas } = useFetch({
-    endpoint: show_tags, metodo: "GET",
+    endpoint: show_tags,
+    metodo: "GET",
   });
 
   const { data: listaWaifus, fetchData: consultarWaifus } = useFetch({
-    endpoint: show_characters, metodo: "GET",
+    endpoint: show_characters,
+    metodo: "GET",
   });
 
   const {
@@ -122,6 +126,12 @@ export const Editar_Wallpaper = () => {
   const { data: wallpaperBv, fetchData: buscarWallpaper } = useFetch({
     endpoint: search_image,
     metodo: "GET",
+    params: { id_imagen: id_wallpaper },
+  });
+
+  const { data: dataEditarWallpaper, fetchData: editarWallpaper } = useFetch({
+    endpoint: edit_wallpaper,
+    metodo: "POST",
     params: { id_imagen: id_wallpaper },
   });
 
@@ -206,7 +216,7 @@ export const Editar_Wallpaper = () => {
       (lora) => lora.fuerza,
     );
 
-    const params = new URLSearchParams({
+    const params = {
       /* id_imagen: id,
       semilla: editWallpaper?.semilla,
       url: editWallpaper?.url,
@@ -229,29 +239,12 @@ export const Editar_Wallpaper = () => {
 
       prompts_positivos_modelos_lora: positivos_modelos_lora,
       prompts_negativos_modelos_lora: negativos_modelos_lora,
-    });
+    };
 
     console.log("Prueba de valores Bv -> ", params);
 
-    try {
-      const response = await fetch(`${edit_wallpaper}?${params.toString()}`);
-      const data = await response.json();
-      //const texto = await response.text();
-
-      //console.log("RESPUESTA actualizacion -> ", texto);
-
-      console.log("Estado de actualizacion -> ", data);
-
-      //SOLO REGRESA TRUE
-      //POR LO QUE AQUI MARCA QUE NO SE ACTUALIZO PERO SI LO HACE BV
-      if (data.Success) console.log("Actualizacion de wallpaper exitosa");
-      else console.log("No se pudo actualizar el wallpaper");
-    } catch (error) {
-      console.error(
-        "Error al intentar actualizar el wallpaper, error -> ",
-        error,
-      );
-    }
+    await editarWallpaper(params);
+    
   };
 
   const waifus = wallpaperEditable.personajes.map((w) => w.id_personaje);
@@ -465,6 +458,10 @@ export const Editar_Wallpaper = () => {
       console.log(`Error al subir imagen al servidor => ${e}`);
     }
   }; */
+
+  console.log("Wallpaper Bv -> ", wallpaperBv);
+  console.log("Wallpaper Original -> ", wallpaperOriginal);
+  console.log("Wallpaper Editable -> ", wallpaperEditable);
 
   return (
     <>
