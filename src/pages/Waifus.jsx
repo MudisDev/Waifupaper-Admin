@@ -6,6 +6,7 @@ import NavBar from "../routes/NavBar";
 import Swal from "sweetalert2";
 import { Footer } from "../routes/Footer";
 import { useCheckAuth } from "../hooks/useCheckAuth";
+import { useFetch } from "../hooks/useFetch";
 
 export default function Waifus() {
   const [waifus, setWaifus] = useState([]);
@@ -15,7 +16,22 @@ export default function Waifus() {
     VerificarAutorizacion();
   }, []);
 
+  const { data: listaWaifus, fetchData: consultarWaifus } = useFetch({
+    endpoint: show_characters,
+    metodo: "GET",
+  });
+
   useEffect(() => {
+    consultarWaifus();
+  }, []);
+
+  useEffect(() => {
+    if (listaWaifus.length == 0) return;
+    setWaifus(listaWaifus);
+  }, [listaWaifus]);
+
+  console.log("Lista Waifus", listaWaifus);
+ /*  useEffect(() => {
     //fetch("http://192.168.1.4/waifupaper/api/lista/mostrar_personajes.php")
     fetch(`${show_characters}`)
       .then((response) => response.json())
@@ -43,7 +59,7 @@ export default function Waifus() {
         console.error("Error fetching waifus:", error);
       });
   }, []);
-
+ */
   return (
     <>
       <header>
@@ -60,7 +76,7 @@ export default function Waifus() {
           {waifus.map((waifu) => (
             <div
               className="waifus-card"
-              key={waifu.id}
+              key={waifu.id_personaje}
               style={{
                 border: "1px solid black",
                 margin: "10px",
@@ -68,10 +84,10 @@ export default function Waifus() {
               }}
             >
               <Link
-                to={`/perfil_waifu/${waifu.id}`} /* state={{ waifuData: waifu }} */
+                to={`/perfil_waifu/${waifu.id_personaje}`} /* state={{ waifuData: waifu }} */
               >
                 <img
-                  src={waifu.imagen}
+                  src={waifu.imagen_perfil}
                   alt={waifu.nombre}
                   style={{ width: 150, height: 250, objectFit: "cover" }}
                 />

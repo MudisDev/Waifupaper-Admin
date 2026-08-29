@@ -5,6 +5,7 @@ import { show_images } from "../config/Url_Config";
 import { Link } from "react-router-dom";
 import { useCheckAuth } from "../hooks/useCheckAuth";
 import { Footer } from "../routes/Footer";
+import { useFetch } from "../hooks/useFetch";
 
 export const Galeria = () => {
   const [imagenes, setImagenes] = React.useState([]);
@@ -15,34 +16,19 @@ export const Galeria = () => {
     VerificarAutorizacion();
   }, []);
 
+  const { data: dataWallpapers, fetchData: cargarWallpapers } = useFetch({
+    endpoint: show_images,
+    metodo: "GET",
+  });
+
   useEffect(() => {
-    const Cargar_Imagenes = async () => {
-      try {
-        const response = await fetch(`${show_images}`);
-        const data = await response.json();
-        console.log("Imagenes obtenidas =>", data);
-
-        if (Array.isArray(data) && data.length > 0) {
-          // Aquí puedes procesar los datos de las imágenes
-          const imgData = data.map((img) => ({
-            id_imagen: img.id_imagen,
-            imagen_listada: img.imagen_listada,
-            url: img.url,
-            /* fecha_actualizacion: img.fecha_actualizacion,
-            fecha_insercion: img.fecha_insercion,
-            id_modelo_base: img.id_modelo_base,
-            semilla: img.semilla, */
-          }));
-
-          setImagenes(imgData);
-        }
-      } catch (error) {
-        console.error("Error al obtener imagenes =>", error);
-      }
-    };
-
-    Cargar_Imagenes();
+    cargarWallpapers();
   }, []);
+
+  useEffect(() => {
+    if (dataWallpapers.length == 0) return;
+    setImagenes(dataWallpapers);
+  }, [dataWallpapers]);
 
   return (
     <>

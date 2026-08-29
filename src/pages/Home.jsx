@@ -6,6 +6,7 @@ import "../styles/appstyles.css";
 import { show_count_total } from "../config/Url_Config";
 import { useCheckAuth } from "../hooks/useCheckAuth";
 import { Footer } from "../routes/Footer";
+import { useFetch } from "../hooks/useFetch";
 
 export const Home = () => {
   const [wallpapers, setWallpapers] = React.useState(null);
@@ -18,53 +19,43 @@ export const Home = () => {
     VerificarAutorizacion();
   }, []);
 
-  const fetchTotalWallpapers = async () => {
-    try {
-      const response = await fetch(`${show_count_total}?tabla=imagen`);
-      const data = await response.json();
-      console.log("Total wallpapers =>", data);
-
-      if (!data.Error) {
-        setWallpapers(data.total);
-      }
-    } catch (error) {
-      console.error("Error fetching total wallpapers:", error);
-    }
-  };
-
-  const fetchTotalUsers = async () => {
-    try {
-      const response = await fetch(`${show_count_total}?tabla=usuario`);
-      const data = await response.json();
-      console.log("Total usuarios =>", data);
-
-      if (!data.Error) {
-        setUsers(data.total);
-      }
-    } catch (error) {
-      console.error("Error fetching total users:", error);
-    }
-  };
-
-  const fetchTotalWaifus = async () => {
-    try {
-      const response = await fetch(`${show_count_total}?tabla=personaje`);
-      const data = await response.json();
-      console.log("Total waifus =>", data);
-
-      if (!data.Error) {
-        setWaifus(data.total);
-      }
-    } catch (error) {
-      console.error("Error fetching total waifus:", error);
-    }
-  };
+  const { data: totalWallpapers, fetchData: consultarTotalWallpapers } =
+    useFetch({
+      endpoint: show_count_total,
+      metodo: "GET",
+      params: { "tabla": "imagen" },
+    });
+  const { data: totalUsuarios, fetchData: consultarTotalUsuarios } = useFetch({
+    endpoint: show_count_total,
+    metodo: "GET",
+    params: { "tabla": "usuario" },
+  });
+  const { data: totalWaifus, fetchData: consultarTotalWaifus } = useFetch({
+    endpoint: show_count_total,
+    metodo: "GET",
+    params: { "tabla": "personaje" },
+  });
 
   useEffect(() => {
-    fetchTotalWallpapers();
-    fetchTotalUsers();
-    fetchTotalWaifus();
+    consultarTotalUsuarios();
+    consultarTotalWaifus();
+    consultarTotalWallpapers();
   }, []);
+
+  useEffect(() => {
+    if (!totalUsuarios) return;
+    setUsers(totalUsuarios.total);
+  }, [totalUsuarios]);
+
+  useEffect(() => {
+    if (!totalWaifus) return;
+    setWaifus(totalWaifus.total);
+  }, [totalWaifus]);
+
+  useEffect(() => {
+    if (!totalWallpapers) return;
+    setWallpapers(totalWallpapers.total);
+  }, [totalWallpapers]);
 
   return (
     <>

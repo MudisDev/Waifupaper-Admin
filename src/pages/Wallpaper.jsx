@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffectEvent } from "react";
 import NavBar from "../routes/NavBar";
 import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
@@ -10,6 +10,7 @@ import {
 } from "../config/Url_Config";
 import { Footer } from "../routes/Footer";
 import { useCheckAuth } from "../hooks/useCheckAuth";
+import { useFetch } from "../hooks/useFetch";
 
 export const Wallpaper = () => {
   const { id } = useParams();
@@ -25,7 +26,57 @@ export const Wallpaper = () => {
     VerificarAutorizacion();
   }, []);
 
+  const { data: listaWaifus, fetchData: consultarWaifus } = useFetch({
+    endpoint: show_characters_for_image,
+    metodo: "GET",
+    params: { id_imagen: id },
+  });
+  const { data: listaEtiquetas, fetchData: consultarEtiquetas } = useFetch({
+    endpoint: consult_tags,
+    metodo: "GET",
+    params: { id_imagen: id },
+  });
+  const { data: listaLoras, fetchData: consultarLoras } = useFetch({
+    endpoint: show_lora_models_for_image,
+    metodo: "GET",
+    params: { id_imagen: id },
+  });
+  const { data: dataWallpaper, fetchData: consultarWallpaper } = useFetch({
+    endpoint: search_view_image,
+    metodo: "GET",
+    params: { id_imagen: id },
+  });
+
   useEffect(() => {
+    consultarEtiquetas();
+    consultarWaifus();
+    consultarLoras();
+    consultarWallpaper();
+  }, []);
+
+  useEffect(() => {
+    if (listaWaifus.length == 0) return;
+    setCharacters(listaWaifus);
+  }, [listaWaifus]);
+
+  useEffect(() => {
+    if (listaEtiquetas.length == 0) return;
+    setTags(listaEtiquetas);
+  }, [listaEtiquetas]);
+
+  useEffect(() => {
+    if (listaLoras.length == 0) return;
+    setLoras(listaLoras);
+  }, [listaLoras]);
+
+  useEffect(() => {
+    if (dataWallpaper.length == 0) return;
+    setWallpaper(dataWallpaper);
+  }, [dataWallpaper]);
+
+  console.log("Lista Loras -> ",listaLoras);
+
+  /* useEffect(() => {
     const Consultar_Personajes = async () => {
       try {
         const response = await fetch(
@@ -49,9 +100,9 @@ export const Wallpaper = () => {
     };
 
     Consultar_Personajes();
-  }, [id]);
+  }, [id]); */
 
-  useEffect(() => {
+  /*   useEffect(() => {
     const Consultar_Etiquetas = async () => {
       try {
         const response = await fetch(`${consult_tags}?id_imagen=${id}`);
@@ -72,9 +123,9 @@ export const Wallpaper = () => {
     };
 
     Consultar_Etiquetas();
-  }, [id]);
+  }, [id]); */
 
-  useEffect(() => {
+/*   useEffect(() => {
     const Consultar_Loras = async () => {
       try {
         const response = await fetch(
@@ -87,7 +138,7 @@ export const Wallpaper = () => {
           const dataLoras = data.map((lora) => ({
             id_modelo_lora: lora.id_modelo_lora,
             nombre_modelo_lora: lora.nombre,
-            /* nombre_etiqueta: lora.nombre_etiqueta, */
+           // nombre_etiqueta: lora.nombre_etiqueta, 
           }));
 
           setLoras(dataLoras);
@@ -98,9 +149,9 @@ export const Wallpaper = () => {
     };
 
     Consultar_Loras();
-  }, [id]);
+  }, [id]); */
 
-  useEffect(() => {
+/*   useEffect(() => {
     const fetchWallpaperData = async () => {
       try {
         const response = await fetch(`${search_view_image}?id_imagen=${id}`);
@@ -127,7 +178,7 @@ export const Wallpaper = () => {
     };
 
     fetchWallpaperData();
-  }, [id]);
+  }, [id]); */
 
   return (
     <>
@@ -140,8 +191,8 @@ export const Wallpaper = () => {
           <>
             <img
               className="wallpaper"
-              src={wallpaper[0].url}
-              alt={`Wallpaper ${wallpaper[0].id_imagen}`}
+              src={wallpaper.url}
+              alt={`Wallpaper ${wallpaper.id_imagen}`}
             />
 
             {tags && (
@@ -178,7 +229,7 @@ export const Wallpaper = () => {
                     <li key={lora.id_modelo_lora} className="tag">
                       {/* <p>{lora.nombre_lora}</p> */}
                       {/* <p>{lora.id_modelo_lora}</p> */}
-                      <p>{lora.nombre_modelo_lora}</p>
+                      <p>{lora.nombre}</p>
                     </li>
                   ))}
                 </ul>
@@ -189,13 +240,13 @@ export const Wallpaper = () => {
               <Link to={`/editar_wallpaper/${id}`}>Editar Wallpaper</Link>
             </div>
             <p></p>
-            <p>ID Imagen: {wallpaper[0].id_imagen}</p>
-            <p>Imagen Listada: {wallpaper[0].imagen_listada}</p>
-            <p>Fecha Actualización: {wallpaper[0].fecha_actualizacion}</p>
-            <p>Fecha Inserción: {wallpaper[0].fecha_insercion}</p>
-            <p>ID Modelo Base: {wallpaper[0].id_modelo_base}</p>
-            <p>Nombre Modelo Base: {wallpaper[0].nombre_modelo_base}</p>
-            <p>Semilla: {wallpaper[0].semilla}</p>
+            <p>ID Imagen: {wallpaper.id_imagen}</p>
+            <p>Imagen Listada: {wallpaper.imagen_listada}</p>
+            <p>Fecha Actualización: {wallpaper.fecha_actualizacion}</p>
+            <p>Fecha Inserción: {wallpaper.fecha_insercion}</p>
+            <p>ID Modelo Base: {wallpaper.id_modelo_base}</p>
+            <p>Nombre Modelo Base: {wallpaper.nombre_modelo_base}</p>
+            <p>Semilla: {wallpaper.semilla}</p>
           </>
         )}
       </main>
