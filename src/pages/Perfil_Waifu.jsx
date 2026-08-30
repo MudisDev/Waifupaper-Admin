@@ -16,7 +16,7 @@ export const Perfil_Waifu = () => {
   const [wallpapers, setWallpapers] = React.useState([]);
   const { id } = useParams();
 
-  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+  const {acceso, CheckAuth: VerificarAutorizacion } = useCheckAuth();
 
   useEffect(() => {
     VerificarAutorizacion();
@@ -35,9 +35,10 @@ export const Perfil_Waifu = () => {
   });
 
   useEffect(() => {
+    if(!acceso) return;
     consultarWallpapers();
     consultarWaifu();
-  }, []);
+  }, [acceso]);
 
   useEffect(() => {
     if (!dataWaifu) return;

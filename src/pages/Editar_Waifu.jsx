@@ -54,7 +54,7 @@ export const Editar_Waifu = () => {
     metodo: "POST",
   });
 
-  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+  const { acceso, CheckAuth: VerificarAutorizacion } = useCheckAuth();
 
   const { subirImagen } = useUploadImage();
 
@@ -63,11 +63,12 @@ export const Editar_Waifu = () => {
   }, []);
 
   useEffect(() => {
+    if (!acceso) return;
     consultarPersonalidades();
     consultarPersonalidadesWaifu();
     consultarEspecies();
     consultarWaifu();
-  }, []);
+  }, [acceso]);
 
   useEffect(() => {
     if (!Array.isArray(personalidadesOriginales)) return;

@@ -29,7 +29,7 @@ export const Agregar_Wallpapers = () => {
   const [modeloLoraSeleccionado, setModeloLoraSeleccionado] =
     React.useState("");
 
-  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+  const {acceso, CheckAuth: VerificarAutorizacion } = useCheckAuth();
 
   useEffect(() => {
     VerificarAutorizacion();
@@ -89,11 +89,12 @@ export const Agregar_Wallpapers = () => {
   const { subirImagen } = useUploadImage();
 
   useEffect(() => {
+    if(!acceso) return;
     consultarModelosBase();
     consultarModelosLora();
     consultarWaifus();
     consultarEtiquetas();
-  }, []);
+  }, [acceso]);
 
   const agregarWallpaper = () => {
     const id = Number(listaWallpapers.length) + 1;

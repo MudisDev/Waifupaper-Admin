@@ -26,7 +26,7 @@ import { Footer } from "../routes/Footer";
 export const Editar_Wallpaper = () => {
   const { id: id_wallpaper } = useParams();
 
-  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+  const {acceso, CheckAuth: VerificarAutorizacion } = useCheckAuth();
 
   useEffect(() => {
     VerificarAutorizacion();
@@ -146,6 +146,7 @@ export const Editar_Wallpaper = () => {
   } = useUploadImage();
 
   useEffect(() => {
+    if(!acceso) return;
     consultarModelosLora();
     consultarModelosBase();
     consultarEtiquetas();
@@ -155,7 +156,7 @@ export const Editar_Wallpaper = () => {
     consultarModelosLoraWallpaper();
     consultarWaifusWallpaper();
     buscarWallpaper();
-  }, []);
+  }, [acceso]);
 
   useEffect(() => {
     if (

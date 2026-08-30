@@ -23,7 +23,7 @@ export const Agregar_Waifu = () => {
     [],
   );
 
-  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+  const {acceso, CheckAuth: VerificarAutorizacion } = useCheckAuth();
 
   useEffect(() => {
     VerificarAutorizacion();
@@ -61,9 +61,10 @@ export const Agregar_Waifu = () => {
   const { subirImagen } = useUploadImage();
 
   useEffect(() => {
+    if(!acceso) return;
     consultarEspecies();
     consultarPersonalidades();
-  }, []);
+  }, [acceso]);
 
   const Registrar_Personaje = async (imageUrl) => {
     const personalidades = personalidadesEditables.map(

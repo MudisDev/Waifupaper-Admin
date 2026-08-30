@@ -13,7 +13,7 @@ export const Home = () => {
   const [users, setUsers] = React.useState(null);
   const [waifus, setWaifus] = React.useState(null);
 
-  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+  const { acceso, CheckAuth: VerificarAutorizacion } = useCheckAuth();
 
   useEffect(() => {
     VerificarAutorizacion();
@@ -23,24 +23,25 @@ export const Home = () => {
     useFetch({
       endpoint: show_count_total,
       metodo: "GET",
-      params: { "tabla": "imagen" },
+      params: { tabla: "imagen" },
     });
   const { data: totalUsuarios, fetchData: consultarTotalUsuarios } = useFetch({
     endpoint: show_count_total,
     metodo: "GET",
-    params: { "tabla": "usuario" },
+    params: { tabla: "usuario" },
   });
   const { data: totalWaifus, fetchData: consultarTotalWaifus } = useFetch({
     endpoint: show_count_total,
     metodo: "GET",
-    params: { "tabla": "personaje" },
+    params: { tabla: "personaje" },
   });
 
   useEffect(() => {
+    if (!acceso) return;
     consultarTotalUsuarios();
     consultarTotalWaifus();
     consultarTotalWallpapers();
-  }, []);
+  }, [acceso]);
 
   useEffect(() => {
     if (!totalUsuarios) return;

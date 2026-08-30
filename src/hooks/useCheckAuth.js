@@ -1,9 +1,11 @@
+import React, { useState } from "react";
 import { check_auth } from "../config/Url_Config";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 export const useCheckAuth = () => {
   const navigate = useNavigate();
+  const [acceso, setAcceso] = React.useState(false);
 
   const mostrarAlerta = () => {
     Swal.fire({
@@ -32,15 +34,14 @@ export const useCheckAuth = () => {
 
       if (!data.Success) {
         /* alert("No tiene permiso para estar aqui Bv"); */
+        setAcceso(false);
         mostrarAlerta();
-      } /* else {
-          if (data.rol === "usuario") CargarCerrarSesionUsuario();
-          else if (data.rol === "encargado") CargarCerrarSesionEncargado();
-        } */
+      } else {
+        setAcceso(true);
+      }
     } catch (error) {
       console.error("Error al consultar inicio de sesion del usuario:", error);
     }
   };
-
-  return { CheckAuth };
+  return { CheckAuth, acceso };
 };

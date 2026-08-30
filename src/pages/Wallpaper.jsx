@@ -20,7 +20,7 @@ export const Wallpaper = () => {
   const [loras, setLoras] = React.useState(null);
   const [characters, setCharacters] = React.useState(null);
 
-  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+  const {acceso, CheckAuth: VerificarAutorizacion } = useCheckAuth();
 
   useEffect(() => {
     VerificarAutorizacion();
@@ -48,11 +48,12 @@ export const Wallpaper = () => {
   });
 
   useEffect(() => {
+    if(!acceso) return;
     consultarEtiquetas();
     consultarWaifus();
     consultarLoras();
     consultarWallpaper();
-  }, []);
+  }, [acceso]);
 
   useEffect(() => {
     if (listaWaifus.length == 0) return;

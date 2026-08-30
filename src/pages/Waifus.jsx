@@ -10,7 +10,7 @@ import { useFetch } from "../hooks/useFetch";
 
 export default function Waifus() {
   const [waifus, setWaifus] = useState([]);
-  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+  const {acceso, CheckAuth: VerificarAutorizacion } = useCheckAuth();
 
   useEffect(() => {
     VerificarAutorizacion();
@@ -22,8 +22,9 @@ export default function Waifus() {
   });
 
   useEffect(() => {
+    if(!acceso) return;
     consultarWaifus();
-  }, []);
+  }, [acceso]);
 
   useEffect(() => {
     if (listaWaifus.length == 0) return;

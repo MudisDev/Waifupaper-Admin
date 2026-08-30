@@ -10,7 +10,7 @@ import { useFetch } from "../hooks/useFetch";
 export const Galeria = () => {
   const [imagenes, setImagenes] = React.useState([]);
 
-  const { CheckAuth: VerificarAutorizacion } = useCheckAuth();
+  const {acceso, CheckAuth: VerificarAutorizacion } = useCheckAuth();
 
   useEffect(() => {
     VerificarAutorizacion();
@@ -22,8 +22,9 @@ export const Galeria = () => {
   });
 
   useEffect(() => {
+    if(!acceso) return;
     cargarWallpapers();
-  }, []);
+  }, [acceso]);
 
   useEffect(() => {
     if (dataWallpapers.length == 0) return;
